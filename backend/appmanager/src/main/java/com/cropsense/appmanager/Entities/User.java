@@ -19,6 +19,9 @@ public class User {
     private String username;
 
     @Column(unique = false, nullable = false)
+    private String pswd;
+
+    @Column(unique = false, nullable = false)
     private String fname;
 
     @Column(unique = false, nullable = false)
@@ -28,12 +31,16 @@ public class User {
     private String email;
 
     @Column(unique = true, nullable = false)
-    private String pNumber;
+    private String pnumber;
 
     // Setter and Getter functions ----------------------------------------------------------------
     
     public void setUsername(String uname) {
         this.username = uname;
+    }
+
+    public void setPswd(String pswd) {
+        this.pswd = pswd;
     }
 
     public void setFname(String firstName) {
@@ -49,7 +56,7 @@ public class User {
     }
 
     public void setPNumber(String number) {
-        this.pNumber = number;
+        this.pnumber = number;
     }
 
     public long getTenantId() {
@@ -58,6 +65,10 @@ public class User {
 
     public String getUsername() {
         return this.username;
+    }
+
+    public String getPswd() {
+        return this.pswd;
     }
 
     public String getFname() {
@@ -73,7 +84,7 @@ public class User {
     }
 
     public String get_PNumber() {
-        return this.pNumber;
+        return this.pnumber;
     }
 
 }

@@ -19,6 +19,7 @@ public class UserService {
     /**
      * Creates & persists a new user in db
      * @param uname
+     * @param pswd
      * @param fname
      * @param lname
      * @param email
@@ -28,6 +29,7 @@ public class UserService {
      */
     public User createUser(
         String uname,
+        String pswd,
         String fname,
         String lname,
         String email,
@@ -36,6 +38,7 @@ public class UserService {
 
         User u = new User();
         u.setUsername(uname);
+        u.setPswd(pswd);
         u.setFname(fname);
         u.setLname(lname);
         u.setEmail(email);
@@ -91,11 +94,6 @@ public class UserService {
     /**
      * Fetch a persisted user by email
      * @param email
-     * @return
-     */
-    /**
-     * Fetch a persisted user by email
-     * @param email
      * @return persited user optional object
      * @throws SQLException
      */
@@ -104,6 +102,123 @@ public class UserService {
         Optional<User> ou = userRepo.findByEmail(email);
         return ou;
 
+    }
+
+
+    /**
+     * Fetch a persisted user by phone number
+     * @param pNumber
+     * @return
+     * @throws SQLException
+     */
+    public Optional<User> fetchUserByPnumber(String pNumber) throws SQLException {
+
+        Optional<User> ou = userRepo.findByPnumber(pNumber);
+        return ou;
+
+    }
+
+
+    /**
+     * Change persisted user's first name
+     * @param id
+     * @param newFname
+     * @return
+     * @throws SQLException
+     */
+    public User updateUserFnameById(long id, String newFname) throws SQLException {
+        
+        User u = userRepo.findById(id).get();
+        u.setFname(newFname);
+        userRepo.save(u);
+
+        return u;
+
+    }
+
+
+    /**
+     * Change persisted user's last name
+     * @param id
+     * @param newLname
+     * @return
+     * @throws SQLException
+     */
+    public User updateUserLnameById(long id, String newLname) throws SQLException {
+
+        User u = userRepo.findById(id).get();
+        u.setLname(newLname);
+        userRepo.save(u);
+
+        return u;
+    }
+
+
+    /**
+     * Change persisted user's username
+     * @param id
+     * @param newUname
+     * @return
+     * @throws SQLException
+     */
+    public User updateUserUnameById(long id, String newUname) throws SQLException {
+
+        User u = userRepo.findById(id).get();
+        u.setUsername(newUname);
+        userRepo.save(u);
+
+        return u;
+    }
+
+
+    /**
+     * Change persisted user's password
+     * @param id
+     * @param newPswd
+     * @return
+     * @throws SQLException
+     */
+    public User updateUserPasswordById(long id, String newPswd) throws SQLException {
+
+        User u = userRepo.findById(id).get();
+        u.setPswd(newPswd);
+        userRepo.save(u);
+
+        return u;
+    }
+
+
+    /**
+     * Change persisted user's email
+     * @param id
+     * @param newEmail
+     * @return
+     * @throws SQLException
+     */
+    public User updateUserEmailById(long id, String newEmail) throws SQLException {
+
+        User u = userRepo.findById(id).get();
+        u.setEmail(newEmail);
+        userRepo.save(u);
+
+        return u;
+    }
+
+
+    /**
+     * Change persisted user's phone number
+     * @param id
+     * @param newPnumber
+     * @return
+     * @throws SQLException
+     */
+    public User updateUserPnumberById(long id, String newPnumber) throws SQLException {
+
+        User u = userRepo.findById(id).get();
+        u.setPNumber(newPnumber);
+        userRepo.save(u);
+
+        return u;
     }
 
 
@@ -117,7 +232,7 @@ public class UserService {
         Optional<User> u = userRepo.findById(id);
         
         if (u.isPresent()) {
-            userRepo.deleteById(null);
+            userRepo.deleteById(id);
         }
 
     }

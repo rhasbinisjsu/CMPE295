@@ -1,6 +1,7 @@
 package com.cropsense.appmanager.Entities;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,14 +19,17 @@ public class ServiceLocation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long locId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "tenantId")
     private User owner;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = false, nullable = false)
     private String locName;
 
-    // add embedded address
+    @Embedded
+    @Column(nullable = false)
+    private Address address;
+
 
     // Setter and Getter functions ----------------------------------------------------------------
 
@@ -35,6 +39,10 @@ public class ServiceLocation {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public void setAddress(Address a) {
+        this.address = a;
     }
 
     public long getLocationId() {
@@ -47,6 +55,10 @@ public class ServiceLocation {
 
     public String getLocationName() {
         return this.locName;
+    }
+
+    public Address getAddress() {
+        return this.address;
     }
 
 }

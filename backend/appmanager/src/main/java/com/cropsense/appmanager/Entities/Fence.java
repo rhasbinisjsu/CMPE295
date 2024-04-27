@@ -17,7 +17,7 @@ public class Fence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long fenceId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "locId")
     private ServiceLocation location;
 
