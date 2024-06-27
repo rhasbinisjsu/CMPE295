@@ -71,7 +71,27 @@ function Farm() {
     return null;
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Make an API call to save the farm to the database
+    const newFarm = {
+      id: data.length + 1, // This is just a placeholder.
+      name: form.name,
+      location: `${form.street}, ${form.city}, ${form.zip}`,
+    };
+    // Example of API call:
+    // await fetch('/api/farms', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(newFarm),
+    // });
 
+    // Update the local state to include the new farm
+    setData([...data, newFarm]);
+    closeModal();
+  };
 
   return (
     <div className="flex h-screen ">
@@ -198,13 +218,19 @@ function Farm() {
             </MapContainer>
           </div>
           <div className="mt-4 text-right">
-            <button
-              onClick={closeModal}
-              className="bg-indigo-400 text-white font-bold py-2 px-4 rounded shadow hover:bg-indigo-700"
-            >
-              Create
-            </button>
-          </div>
+              <button
+                onClick={handleSubmit}
+                className="bg-indigo-400 text-white py-2 px-4 rounded shadow hover:bg-green-700"
+              >
+                Create
+              </button>
+              <button
+                onClick={closeModal}
+                className="bg-gray-400 text-white py-2 px-4 rounded shadow hover:bg-gray-700 ml-2"
+              >
+                Close
+              </button>
+            </div>
         </div>
       </Modal>
     </div>
