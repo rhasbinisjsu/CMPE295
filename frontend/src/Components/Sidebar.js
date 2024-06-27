@@ -23,7 +23,7 @@ const Sidebar = () => {
        <Link
           to="/UserDashboard"
           className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
-            isActive('/UserDashboard') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-gray-700 hover:text-white'
+            isActive('/UserDashboard') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
           <HomeIcon className="h-5 w-5 mr-2" />
@@ -33,7 +33,7 @@ const Sidebar = () => {
           <Link
           to="/Farm"
           className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
-            isActive('/Farm') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-gray-700 hover:text-white'
+            isActive('/Farm') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
           <MapIcon className="h-5 w-5 mr-2" />
@@ -43,7 +43,7 @@ const Sidebar = () => {
           <Link
           to="/Land"
           className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
-            isActive('/Land') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-gray-700 hover:text-white'
+            isActive('/Land') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
           <Squares2X2Icon className="h-5 w-5 mr-2" />
@@ -53,7 +53,7 @@ const Sidebar = () => {
           <Link
           to="/Crop"
           className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
-            isActive('/Crop') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-gray-700 hover:text-white'
+            isActive('/Crop') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
           <SquaresPlusIcon className="h-5 w-5 mr-2" />
@@ -63,7 +63,7 @@ const Sidebar = () => {
           <Link
           to="/Mission"
           className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
-            isActive('/Mission') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-gray-700 hover:text-white'
+            isActive('/Mission') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
           <CursorArrowRippleIcon className="h-5 w-5 mr-2" />
@@ -73,7 +73,7 @@ const Sidebar = () => {
           <Link
           to="/Metrics"
           className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
-            isActive('/Metrics') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-gray-700 hover:text-white'
+            isActive('/Metrics') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
           <ChartPieIcon className="h-5 w-5 mr-2" />
