@@ -3,6 +3,8 @@ import './App.css';
 
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import React from 'react';
+import './index.css';
+
 
 import Homepage from './Components/Homepage';
 import UserLogin from './Components/UserLogin';
