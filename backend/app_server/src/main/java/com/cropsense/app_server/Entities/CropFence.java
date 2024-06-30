@@ -5,14 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "farmFences")
-public class FarmFence extends GeoFence {
-
+@Table(name = "cropFences")
+public class CropFence extends GeoFence {
+    
     @Column(nullable = false, unique = true)
-    private long farmId;
+    private long cropId;
 
-    public long getFarmId() {
-        return this.farmId;
+    public long getCropId() {
+        return this.cropId;
     }
 
 }

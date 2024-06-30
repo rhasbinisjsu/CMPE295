@@ -17,7 +17,7 @@ public class FarmFenceService {
     private FarmFenceRepository ffRepo;
 
     // define and create logger instance
-    AppLogger logger = new AppLogger(getClass().toString());
+    private final AppLogger logger = new AppLogger(getClass().toString());
 
     /**
      * Persist a new farm fence

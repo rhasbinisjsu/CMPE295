@@ -17,7 +17,7 @@ public class FenceCoordinateService {
     private FenceCoordinateRepository fcRepo;
 
     // define and create logger object
-    AppLogger logger = new AppLogger(getClass().toString());
+    private final AppLogger logger = new AppLogger(getClass().toString());
 
     /**
      * Persist a new fence coordinate
@@ -45,17 +45,17 @@ public class FenceCoordinateService {
      * @return
      * @throws SQLException
      */
-    public List<FenceCoordinate> fetchCoordinatesForFence(long fenceId) throws SQLException {
+    public List<FenceCoordinate> fetchCoordinatesForFence(long fenceId, String fenceType) throws SQLException {
 
-        logger.logInfoMsg("Fetching coordinates for farm fence with ID: " + Long.toString(fenceId));
+        logger.logInfoMsg("Fetching coordinates for " + fenceType + " fence with ID: " + Long.toString(fenceId));
 
         try {
-            List<FenceCoordinate> fcList = fcRepo.findByFenceId(fenceId);
-            logger.logInfoMsg("Fetched coordinates for fence with ID: " + Long.toString(fenceId));
+            List<FenceCoordinate> fcList = fcRepo.findByFenceIdAndFenceType(fenceId, fenceType);
+            logger.logInfoMsg("Fetched coordinates for " + fenceType + " fence with ID: " + Long.toString(fenceId));
             return fcList;
         }
         catch (Exception e) {
-            logger.logErrorMsg("Failed to fetch coordinates for fence with ID: " + Long.toString(fenceId) + "\n Reason: " + e.getMessage());
+            logger.logErrorMsg("Failed to fetch coordinates for " + fenceType + " fence with ID: " + Long.toString(fenceId) + "\n Reason: " + e.getMessage());
             throw new SQLException();
         }
 
@@ -67,16 +67,16 @@ public class FenceCoordinateService {
      * @param fenceId
      * @throws SQLException
      */
-    public void deleteCoordinatesForFence(long fenceId) throws SQLException {
+    public void deleteCoordinatesForFence(long fenceId, String fenceType) throws SQLException {
 
-        logger.logInfoMsg("Deleteing fence coordinates for fence with ID: " + Long.toString(fenceId));
+        logger.logInfoMsg("Deleteing fence coordinates for " + fenceType + " fence with ID: " + Long.toString(fenceId));
 
         try {
-            fcRepo.deleteByFenceId(fenceId);
-            logger.logInfoMsg("Successfully deleted fence coordinates for fence with ID: " + Long.toString(fenceId));
+            fcRepo.deleteByFenceIdAndFenceType(fenceId, fenceType);
+            logger.logInfoMsg("Successfully deleted fence coordinates for " + fenceType + " fence with ID: " + Long.toString(fenceId));
         }
         catch (Exception e) {
-            logger.logErrorMsg("Failed to delete fence coordinates for fence with ID: " + Long.toString(fenceId) + " \n Reason: " + e.getMessage());
+            logger.logErrorMsg("Failed to delete fence coordinates for " + fenceType + " fence with ID: " + Long.toString(fenceId) + " \n Reason: " + e.getMessage());
             throw new SQLException();
         }
     }

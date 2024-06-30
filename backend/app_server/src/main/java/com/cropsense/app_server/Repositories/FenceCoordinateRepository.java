@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FenceCoordinateRepository extends JpaRepository<FenceCoordinate, Long> {
     
-    List<FenceCoordinate> findByFenceId(long fenceId);
-    void deleteByFenceId(long fenceId);
+    List<FenceCoordinate> findByFenceIdAndFenceType(long fenceId, String fenceType);
+    void deleteByFenceIdAndFenceType(long fenceId, String fenceType);
 
 }

@@ -26,7 +26,7 @@ public class MissionPlan {
     private long ownerId;
 
     @Column(nullable = false, unique = false)
-    private long farmId;
+    private long cropId;
 
     @Column(nullable = true, unique = false)
     private String missionDesc; 
@@ -52,8 +52,8 @@ public class MissionPlan {
         this.ownerId = oId;
     }
 
-    public void setFarmId(long fId) {
-        this.farmId = fId;
+    public void setCropId(long cId) {
+        this.cropId = cId;
     }
 
     public void setMissionDesc(String desc) {
@@ -85,8 +85,8 @@ public class MissionPlan {
         return this.ownerId;
     }
 
-    public long getFarmId() {
-        return this.farmId;
+    public long getCropId() {
+        return this.cropId;
     }
 
     public String getMissionDesc() {

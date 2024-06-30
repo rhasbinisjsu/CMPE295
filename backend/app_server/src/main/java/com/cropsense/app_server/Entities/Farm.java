@@ -1,5 +1,7 @@
 package com.cropsense.app_server.Entities;
 
+import java.util.List;
+
 import com.cropsense.app_server.Entities.Embeddables.Address;
 
 import jakarta.persistence.CascadeType;
@@ -10,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -34,6 +37,10 @@ public class Farm {
     @OneToOne(targetEntity = FarmFence.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "farmId", referencedColumnName = "farmId")
     private FarmFence locationFence;
+
+    @OneToMany(targetEntity = Crop.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "farmId", referencedColumnName = "farmId")
+    private List<Crop> crops;
 
     // setters
     public void setName(String n) {

@@ -18,7 +18,7 @@ public class UserService {
     private UserRepository uRepo;
 
     // define and initialize logger
-    AppLogger logger = new AppLogger(getClass().toString());
+    private final AppLogger logger = new AppLogger(getClass().toString());
 
     /**
      * Persist a new user

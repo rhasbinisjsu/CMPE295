@@ -69,23 +69,23 @@ public class MissionPlanService {
 
 
     /**
-     * Fetch all persisted mission plans for owner by farm
+     * Fetch all persisted mission plans for owner by crop
      * @param ownerId
-     * @param farmId
+     * @param cropId
      * @return
      * @throws SQLException
      */
-    public List<MissionPlan> fetchMissionPlansByFarm(long ownerId, long farmId) throws SQLException {
+    public List<MissionPlan> fetchMissionPlansByCrop(long ownerId, long cropId) throws SQLException {
         
-        logger.logInfoMsg("Fetching mission plans for farm with ID: " + Long.toString(farmId) + " and owner with ID: " + Long.toString(ownerId));
+        logger.logInfoMsg("Fetching mission plans for crop with ID: " + Long.toString(cropId) + " and owner with ID: " + Long.toString(ownerId));
         
         try {
-            List<MissionPlan> mpList = mpRepo.findByOwnerIdAndFarmId(ownerId, farmId);
-            logger.logInfoMsg("Fetched mission plans for farm with ID: " + Long.toString(farmId));
+            List<MissionPlan> mpList = mpRepo.findByOwnerIdAndCropId(ownerId, cropId);
+            logger.logInfoMsg("Fetched mission plans for crop with ID: " + Long.toString(cropId));
             return mpList;
         }
         catch (Exception e) {
-            logger.logWarnMsg("Failed to fetch mission plans for farm with ID: " + Long.toString(farmId) + " and owner with ID: " + Long.toString(ownerId) + " \n Reason: " + e.getMessage());
+            logger.logWarnMsg("Failed to fetch mission plans for crop with ID: " + Long.toString(cropId) + " and owner with ID: " + Long.toString(ownerId) + " \n Reason: " + e.getMessage());
             throw new SQLException();
         }
         
@@ -117,19 +117,19 @@ public class MissionPlanService {
 
 
     /**
-     * Fetch all persisted mission plans for a farm by status
-     * @param farmId
+     * Fetch all persisted mission plans for a crop by status
+     * @param cropId
      * @param status
      * @return
      * @throws SQLException
      */
-    public List<MissionPlan> fetchMissionPlansByFarmAndStatus(long farmId, String status) throws SQLException {
+    public List<MissionPlan> fetchMissionPlansByCropAndStatus(long cropId, String status) throws SQLException {
 
-        logger.logInfoMsg("Fetching mission plans for farm with ID: " + Long.toString(farmId) + " and status: " + status);
+        logger.logInfoMsg("Fetching mission plans for crop with ID: " + Long.toString(cropId) + " and status: " + status);
 
         try {
-            List<MissionPlan> mpList = mpRepo.findByFarmIdAndStatus(farmId, status);
-            logger.logInfoMsg("Fetcehd mission plans for farm with ID: " + Long.toString(farmId) + " with status: " + status);
+            List<MissionPlan> mpList = mpRepo.findByCropIdAndStatus(cropId, status);
+            logger.logInfoMsg("Fetcehd mission plans for crop with ID: " + Long.toString(cropId) + " with status: " + status);
             return mpList;
         }
         catch (Exception e) {
@@ -165,19 +165,19 @@ public class MissionPlanService {
 
 
     /**
-     * Fetch persisted mission plans for a farm by type
-     * @param farmId
+     * Fetch persisted mission plans for a crop by type
+     * @param cropId
      * @param missionType
      * @return
      * @throws SQLException
      */
-    public List<MissionPlan> fetchMissionPlansByFarmAndMissionType(long farmId, String missionType) throws SQLException {
+    public List<MissionPlan> fetchMissionPlansByCropAndMissionType(long cropId, String missionType) throws SQLException {
         
-        logger.logInfoMsg("Fetching mission plans for farm with ID: " + Long.toString(farmId) + " where mission type: " + missionType);
+        logger.logInfoMsg("Fetching mission plans for crop with ID: " + Long.toString(cropId) + " where mission type: " + missionType);
 
         try {
-            List<MissionPlan> mpList = mpRepo.findByFarmIdAndMissionType(farmId, missionType);
-            logger.logInfoMsg("Fetched mission plans for farm with ID: " + Long.toString(farmId) + " where mission type: " + missionType);
+            List<MissionPlan> mpList = mpRepo.findByCropIdAndMissionType(cropId, missionType);
+            logger.logInfoMsg("Fetched mission plans for crop with ID: " + Long.toString(cropId) + " where mission type: " + missionType);
             return mpList;
         }
         catch (Exception e) {
@@ -213,19 +213,19 @@ public class MissionPlanService {
 
 
     /**
-     * Fetch persisted mission plans for farm on date
-     * @param farmId
+     * Fetch persisted mission plans for crop on date
+     * @param cropId
      * @param d
      * @return
      * @throws SQLException
      */
-    public List<MissionPlan> fetchMissionPlansForFarmAndDate(long farmId, Date d) throws SQLException {
+    public List<MissionPlan> fetchMissionPlansForCropAndDate(long cropId, Date d) throws SQLException {
 
-        logger.logInfoMsg("Fetching mission plans for farm with ID: " + Long.toString(farmId) + " on date: " + d.toString());
+        logger.logInfoMsg("Fetching mission plans for crop with ID: " + Long.toString(cropId) + " on date: " + d.toString());
 
         try {
-            List<MissionPlan> mpList = mpRepo.findByFarmIdAndMissionDate(farmId, d);
-            logger.logInfoMsg("Fetched mission plans for farm with ID: " + Long.toString(farmId) + " on date: " + d.toString());
+            List<MissionPlan> mpList = mpRepo.findByCropIdAndMissionDate(cropId, d);
+            logger.logInfoMsg("Fetched mission plans for crop with ID: " + Long.toString(cropId) + " on date: " + d.toString());
             return mpList;
         }
         catch (Exception e) {
@@ -261,20 +261,20 @@ public class MissionPlanService {
 
     
     /**
-     * Fetch mission plans for a farm between dates
-     * @param farmId
+     * Fetch mission plans for a crop between dates
+     * @param cropId
      * @param startDate
      * @param endDate
      * @return
      * @throws SQLException
      */
-    public List<MissionPlan> fetchMissionPlansForFarmBetweenDates(long farmId, Date startDate, Date endDate) throws SQLException {
+    public List<MissionPlan> fetchMissionPlansForCropBetweenDates(long cropId, Date startDate, Date endDate) throws SQLException {
 
-        logger.logInfoMsg("Fetching mission plans for farm with ID: " + Long.toString(farmId) + " betweek dates: " + startDate.toString() + " - " + endDate.toString());
+        logger.logInfoMsg("Fetching mission plans for crop with ID: " + Long.toString(cropId) + " betweek dates: " + startDate.toString() + " - " + endDate.toString());
 
         try {
-            List<MissionPlan> mpList = mpRepo.findByFarmIdAndMissionDateBetween(farmId, startDate, endDate);
-            logger.logInfoMsg("Fetched mission plans for farm with ID: " + Long.toString(farmId) + " betweek dates: " + startDate.toString() + " - " + endDate.toString());
+            List<MissionPlan> mpList = mpRepo.findByCropIdAndMissionDateBetween(cropId, startDate, endDate);
+            logger.logInfoMsg("Fetched mission plans for crop with ID: " + Long.toString(cropId) + " betweek dates: " + startDate.toString() + " - " + endDate.toString());
             return mpList;
         }
         catch (Exception e) {

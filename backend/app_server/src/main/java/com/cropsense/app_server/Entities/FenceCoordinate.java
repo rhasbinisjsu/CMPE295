@@ -19,6 +19,9 @@ public class FenceCoordinate {
     private long fenceId;
 
     @Column(nullable = false, unique = false)
+    private String fenceType;
+
+    @Column(nullable = false, unique = false)
     private int chainId;
 
     @Column(nullable = false, unique = false)
@@ -30,6 +33,10 @@ public class FenceCoordinate {
     // setters
     public void setFenceId(long fenceId) {
         this.fenceId = fenceId;
+    }
+
+    public void setFenceType(String fType) {
+        this.fenceType = fType;
     }
 
     public void setChainId(int o) {
@@ -51,6 +58,10 @@ public class FenceCoordinate {
 
     public long getFenceId() {
         return this.fenceId;
+    }
+
+    public String getFenceType() {
+        return this.fenceType;
     }
 
     public int getChainId() {

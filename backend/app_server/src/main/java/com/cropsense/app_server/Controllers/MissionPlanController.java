@@ -80,24 +80,24 @@ public class MissionPlanController {
 
 
     /**
-     * Fetch all persisted mission plans for farm
+     * Fetch all persisted mission plans for crop
      * @param ownerId
-     * @param farmId
+     * @param cropId
      * @return
      * @throws SQLException
      */
     @GetMapping(
-        path = "/fetchMissionPlansByFarm",
+        path = "/fetchMissionPlansByCrop",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<MissionPlan>> fetchMissionPlansByFarm(
+    public ResponseEntity<List<MissionPlan>> fetchMissionPlansByCrop(
         @RequestParam long ownerId,
-        @RequestParam long farmId
+        @RequestParam long cropId
     ) throws SQLException {
 
-        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch all mission plans for farm with ID: " + Long.toString(farmId));
-        List<MissionPlan> mpList = mpService.fetchMissionPlansByFarm(ownerId, farmId);
-        logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch all mission plans for farm");
+        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch all mission plans for crop with ID: " + Long.toString(cropId));
+        List<MissionPlan> mpList = mpService.fetchMissionPlansByCrop(ownerId, cropId);
+        logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch all mission plans for crop");
         return new ResponseEntity<List<MissionPlan>>(mpList, HttpStatus.OK);
 
     }
@@ -128,24 +128,24 @@ public class MissionPlanController {
 
 
     /**
-     * Fetch all mission plans for farm by status
-     * @param farmId
+     * Fetch all mission plans for crop by status
+     * @param cropId
      * @param status
      * @return
      * @throws SQLException
      */
     @GetMapping(
-        path = "/fetchMissionPlansByFarmAndStatus",
+        path = "/fetchMissionPlansByCropAndStatus",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<MissionPlan>> fetchMissionPlansByFarmAndStatus(
-        @RequestParam long farmId,
+    public ResponseEntity<List<MissionPlan>> fetchMissionPlansByCropAndStatus(
+        @RequestParam long cropId,
         @RequestParam String status
     ) throws SQLException {
 
-        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch all mission plans for farm: " + Long.toString(farmId) + " with status: " + status);
-        List<MissionPlan> mpList = mpService.fetchMissionPlansByFarmAndStatus(farmId, status);
-        logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch all mission plans for farm: " + Long.toString(farmId) + " with status: " + status);
+        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch all mission plans for crop: " + Long.toString(cropId) + " with status: " + status);
+        List<MissionPlan> mpList = mpService.fetchMissionPlansByCropAndStatus(cropId, status);
+        logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch all mission plans for crop: " + Long.toString(cropId) + " with status: " + status);
         return new ResponseEntity<List<MissionPlan>>(mpList, HttpStatus.OK);
 
     }
@@ -176,24 +176,24 @@ public class MissionPlanController {
 
 
     /**
-     * Fetch all persisted mission plans for farm by type
-     * @param farmId
+     * Fetch all persisted mission plans for crop by type
+     * @param cropId
      * @param missionType
      * @return
      * @throws SQLException
      */
     @GetMapping(
-        path = "/fetchMissionPlansByFarmAndMissionType",
+        path = "/fetchMissionPlansByCropAndMissionType",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<MissionPlan>> fetchMissionPlansByFarmAndMissionType(
-        @RequestParam long farmId,
+    public ResponseEntity<List<MissionPlan>> fetchMissionPlansByCropAndMissionType(
+        @RequestParam long cropId,
         @RequestParam String missionType
     ) throws SQLException {
 
-        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch all mission plans with type: " + missionType + " for farm: " + Long.toString(farmId));
-        List<MissionPlan> mpList = mpService.fetchMissionPlansByFarmAndMissionType(farmId, missionType);
-        logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch all mission plans with type: " + missionType + " for farm: " + Long.toString(farmId));
+        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch all mission plans with type: " + missionType + " for crop: " + Long.toString(cropId));
+        List<MissionPlan> mpList = mpService.fetchMissionPlansByCropAndMissionType(cropId, missionType);
+        logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch all mission plans with type: " + missionType + " for crop: " + Long.toString(cropId));
         return new ResponseEntity<List<MissionPlan>>(mpList, HttpStatus.OK);
 
     }
@@ -228,28 +228,28 @@ public class MissionPlanController {
 
 
     /**
-     * Fetch persisted mission plans for farm on a date 
-     * @param farmId
+     * Fetch persisted mission plans for crop on a date 
+     * @param cropId
      * @param date
      * @return
      * @throws SQLException
      */
     @GetMapping(
-        path = "/fetchMissionPlansByFarmAndDate",
+        path = "/fetchMissionPlansByCropAndDate",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<MissionPlan>> fetchMissionPlansByFarmAndDate(
-        @RequestParam long farmId,
+    public ResponseEntity<List<MissionPlan>> fetchMissionPlansByCropAndDate(
+        @RequestParam long cropId,
         @RequestParam String date
     ) throws SQLException {
 
-        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch mission plans for farm: " + Long.toString(farmId) + " with date: " + date);
+        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch mission plans for crop: " + Long.toString(cropId) + " with date: " + date);
 
         // convert date string to java.sql.Date object
         Date sqlDate = Date.valueOf(date);
-        List<MissionPlan> mpList = mpService.fetchMissionPlansForFarmAndDate(farmId, sqlDate);
+        List<MissionPlan> mpList = mpService.fetchMissionPlansForCropAndDate(cropId, sqlDate);
 
-        logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch mission plans for farm: " + Long.toString(farmId) + " with date: " + date);
+        logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch mission plans for crop: " + Long.toString(cropId) + " with date: " + date);
         return new ResponseEntity<List<MissionPlan>>(mpList, HttpStatus.OK);
 
     }
@@ -287,31 +287,31 @@ public class MissionPlanController {
 
 
     /**
-     * Fetch persisted mission plans for a farm within a date range
-     * @param farmId
+     * Fetch persisted mission plans for a crop within a date range
+     * @param cropId
      * @param startDate
      * @param endDate
      * @return
      * @throws SQLException
      */
     @GetMapping(
-        path = "/fetchMissionPlansForFarmBetweenDates",
+        path = "/fetchMissionPlansForCropBetweenDates",
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<MissionPlan>> fetchMissionPlansForFarmBetweenDates(
-        @RequestParam Long farmId,
+    public ResponseEntity<List<MissionPlan>> fetchMissionPlansForCropBetweenDates(
+        @RequestParam Long cropId,
         @RequestParam String startDate,
         @RequestParam String endDate
     ) throws SQLException {
 
-        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch mission plans for Farm with ID: " + Long.toString(farmId) + " for date range: " + startDate + " - " + endDate);
+        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch mission plans for crop with ID: " + Long.toString(cropId) + " for date range: " + startDate + " - " + endDate);
 
         // convert date strings to java.sql.Date objects
         Date sqlStartDate = Date.valueOf(startDate);
         Date sqlEndDate = Date.valueOf(endDate);
-        List<MissionPlan> mpList = mpService.fetchMissionPlansForFarmBetweenDates(farmId, sqlStartDate, sqlEndDate);
+        List<MissionPlan> mpList = mpService.fetchMissionPlansForCropBetweenDates(cropId, sqlStartDate, sqlEndDate);
 
-        logger.logInfoMsg("GET - [ EXIT ] - Exiting request to fetch mission plans for Farm with ID: " + Long.toString(farmId) + " for date range: " + startDate + " - " + endDate);
+        logger.logInfoMsg("GET - [ EXIT ] - Exiting request to fetch mission plans for crop with ID: " + Long.toString(cropId) + " for date range: " + startDate + " - " + endDate);
         return new ResponseEntity<List<MissionPlan>>(mpList, HttpStatus.OK);
         
     }

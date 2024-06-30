@@ -11,14 +11,14 @@ import java.sql.Date;
 public interface MissionPlanRepository extends JpaRepository<MissionPlan, Long> {
     
     List<MissionPlan> findByOwnerId(long ownerId);
-    List<MissionPlan> findByOwnerIdAndFarmId(long ownerId, long farmId);
-    List<MissionPlan> findByFarmIdAndStatus(long farmId, String status);
+    List<MissionPlan> findByOwnerIdAndCropId(long ownerId, long cropId);
+    List<MissionPlan> findByCropIdAndStatus(long cropId, String status);
     List<MissionPlan> findByOwnerIdAndStatus(long ownerId, String status);
     List<MissionPlan> findByOwnerIdAndMissionType(long ownerId, String missionType);
-    List<MissionPlan> findByFarmIdAndMissionType(long famrId, String missionType);
+    List<MissionPlan> findByCropIdAndMissionType(long cropId, String missionType);
     List<MissionPlan> findByOwnerIdAndMissionDate(long ownerId, Date missionDate);
-    List<MissionPlan> findByFarmIdAndMissionDate(long farmId, Date missionDate);
+    List<MissionPlan> findByCropIdAndMissionDate(long cropId, Date missionDate);
     List<MissionPlan> findByOwnerIdAndMissionDateBetween(long ownerId, Date startDate, Date endDate);
-    List<MissionPlan> findByFarmIdAndMissionDateBetween(long farmId, Date startDate, Date endDate);
+    List<MissionPlan> findByCropIdAndMissionDateBetween(long cropId, Date startDate, Date endDate);
 
 }

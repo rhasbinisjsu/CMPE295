@@ -31,6 +31,12 @@ public class FenceCoordinateController {
     // define and create logger object
     AppLogger logger = new AppLogger(getClass().toString());
 
+    /**
+     * Create and persist new fence coordinates
+     * @param coordinates
+     * @return
+     * @throws SQLException
+     */
     @PostMapping(
         path = "/createFenceCoordinates",
         consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -40,17 +46,21 @@ public class FenceCoordinateController {
     public ResponseEntity<HttpStatus> createFenceCoordinates(
         @RequestBody List<FenceCoordinate> coordinates
     ) throws SQLException {
-        
+
         logger.logInfoMsg("POST [ ENTER ] - Received request to persist fence coordinates");
 
         logger.logInfoMsg("Checking if fence has coordinates");
-        if (fcService.fetchCoordinatesForFence(coordinates.get(0).getFenceId()).size() > 0) {
-            logger.logInfoMsg("Found fence coordinates for fence with ID: " + Long.toString(coordinates.get(0).getFenceId()));
-            fcService.deleteCoordinatesForFence(coordinates.get(0).getFenceId());
+        
+        long fenceId = coordinates.get(0).getFenceId();
+        String fenceType = coordinates.get(0).getFenceType();
+
+        if (fcService.fetchCoordinatesForFence(fenceId, fenceType).size() > 0) {
+            logger.logInfoMsg("Found fence coordinates for fence with ID: " + Long.toString(fenceId));
+            fcService.deleteCoordinatesForFence(fenceId, fenceType);
             logger.logInfoMsg("Deleted old fence coordinates");
         }
         else {
-            logger.logInfoMsg("No coordinates found for fence with ID: " + Long.toString(coordinates.get(0).getFenceId()));
+            logger.logInfoMsg("No coordinates found for fence with ID: " + Long.toString(fenceId) + " and type: " + fenceType);
         }
 
         for (int i = 0; i < coordinates.size(); i++) {
@@ -74,11 +84,12 @@ public class FenceCoordinateController {
         produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<List<FenceCoordinate>> fetchFenceCoordinates(
-        @RequestParam long fenceId
+        @RequestParam long fenceId,
+        @RequestParam String fenceType
     ) throws SQLException {
 
-        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch fence coordinates for fence with ID: " + Long.toString(fenceId));
-        List<FenceCoordinate> fcList = fcService.fetchCoordinatesForFence(fenceId);
+        logger.logInfoMsg("GET [ ENTER ] - Received request to fetch fence coordinates for " + fenceType + " fence with ID: " + Long.toString(fenceId));
+        List<FenceCoordinate> fcList = fcService.fetchCoordinatesForFence(fenceId, fenceType);
         
         logger.logInfoMsg("GET [ EXIT ] - Exiting request to fetch fence coordinates");
         return new ResponseEntity<List<FenceCoordinate>>(fcList, HttpStatus.OK);
@@ -94,12 +105,15 @@ public class FenceCoordinateController {
     @DeleteMapping(
         path = "/deleteCoordinatesForFence"
     )
-    public ResponseEntity<HttpStatus> deleteCoordinatesForFence(@RequestParam long fenceId) throws SQLException {
+    public ResponseEntity<HttpStatus> deleteCoordinatesForFence(
+        @RequestParam long fenceId,
+        @RequestParam String fenceType
+    ) throws SQLException {
 
-        logger.logInfoMsg("DELETE [ ENTER ] - Received request to delete farm fence coordinates for fence with ID: " + Long.toString(fenceId));
-        fcService.deleteCoordinatesForFence(fenceId);
+        logger.logInfoMsg("DELETE [ ENTER ] - Received request to delete " + fenceType + " fence coordinates for fence with ID: " + Long.toString(fenceId));
+        fcService.deleteCoordinatesForFence(fenceId, fenceType);
         
-        logger.logInfoMsg("DELETE [ EXIT ] - Exiting request to delete farm fence coordinates");
+        logger.logInfoMsg("DELETE [ EXIT ] - Exiting request to delete " + fenceType + " fence coordinates");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
