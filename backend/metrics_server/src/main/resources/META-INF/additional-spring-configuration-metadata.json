@@ -1,0 +1,14 @@
+{
+    "properties": [
+        {
+            "name": "appserver.profile.server-ip",
+            "type": "java.lang.String",
+            "description": "A description for 'appserver.profile.server-ip'"
+        },
+        {
+            "name": "appserver.profile.server-port",
+            "type": "java.lang.String",
+            "description": "A description for 'appserver.profile.server-port'"
+        }
+    ]
+}
