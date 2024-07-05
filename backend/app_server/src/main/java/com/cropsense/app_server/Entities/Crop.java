@@ -1,12 +1,18 @@
 package com.cropsense.app_server.Entities;
 
 import java.sql.Date;
+import java.util.List;
 
+import com.cropsense.app_server.Entities.Metrics.SoilMetric;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -40,6 +46,11 @@ public class Crop {
 
     @Column(nullable = false, unique = false)
     private Date endDate;
+
+    // foreign key to crop land/soil metrics
+    @OneToMany(targetEntity = SoilMetric.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "cropId", referencedColumnName = "cropId")
+    private List<SoilMetric> soilMetrics;
 
     // Setters
     public void setFarmId(long farmId) {
