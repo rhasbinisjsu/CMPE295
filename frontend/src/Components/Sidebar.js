@@ -11,7 +11,7 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="h-screen w-64 bg-white text-black border border-gray-300">
+    <div className="h-screen w-64 bg-white text-black p-4 border-r">
 
 
       <nav className="mt-5">
