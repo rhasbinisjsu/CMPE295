@@ -12,12 +12,7 @@ const Sidebar = () => {
 
   return (
     <div className="h-screen w-64 bg-white text-black border border-gray-300">
-      <div className="p-4 flex items-center justify-center">
-        <img src={logo} alt="Logo" style={{height: '60px', width: '60px', marginRight: '10px' }} />
-      </div>
-      <div className="p-4 flex items-center justify-center">
-        <h1 className="px-10 text-2xl font-bold">CropSense</h1>
-      </div>
+
 
       <nav className="mt-5">
        <Link
