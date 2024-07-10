@@ -11,13 +11,13 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="h-screen w-64 bg-white text-black p-4 border-r">
+    <div className="h-screen py-8 w-64 bg-white text-black p-4 border-r items-center">
 
 
       <nav className="mt-5">
        <Link
           to="/UserDashboard"
-          className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
+          className={`block text-lg py-8 px-10 rounded transition duration-200 flex items-center ${
             isActive('/UserDashboard') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
@@ -27,7 +27,7 @@ const Sidebar = () => {
 
           <Link
           to="/Farm"
-          className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
+          className={`block text-lg py-8 px-10 rounded transition duration-200 flex items-center ${
             isActive('/Farm') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
@@ -35,19 +35,10 @@ const Sidebar = () => {
           Farm
         </Link>
 
-          <Link
-          to="/Land"
-          className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
-            isActive('/Land') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
-          }`}
-        >
-          <Squares2X2Icon className="h-5 w-5 mr-2" />
-          Land
-        </Link>
 
           <Link
           to="/Crop"
-          className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
+          className={`block text-lg py-8 px-10 rounded transition duration-200 flex items-center ${
             isActive('/Crop') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
@@ -57,7 +48,7 @@ const Sidebar = () => {
 
           <Link
           to="/Mission"
-          className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
+          className={`block text-lg py-8 px-10 rounded transition duration-200 flex items-center ${
             isActive('/Mission') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
           }`}
         >
@@ -65,15 +56,6 @@ const Sidebar = () => {
           Mission
         </Link>
 
-          <Link
-          to="/Metrics"
-          className={`block text-lg py-4 px-10 rounded transition duration-200 flex items-center ${
-            isActive('/Metrics') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
-          }`}
-        >
-          <ChartPieIcon className="h-5 w-5 mr-2" />
-          Metrics
-        </Link>
 
       </nav>
     </div>

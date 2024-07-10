@@ -11,9 +11,7 @@ import UserLogin from './Components/UserLogin';
 import UserSignup from './Components/UserSignUp';
 import UserDashboard from './Components/UserDashboard';
 import Farm from './Components/Farm';
-import Land from './Components/Land';
 import Crop from './Components/Crop';
-import Metrics from './Components/Metrics';
 import Mission from './Components/Mission';
 import Farm1 from './Components/Farm1';
 import Header from './Components/Header';
@@ -54,9 +52,7 @@ function App(){
               <Route exact path="/userLogin" component={UserLogin}/>
               <Route exact path="/userSignUp" component={UserSignup}/>
                 <Route exact path="/Farm" component={Farm}/>
-                <Route exact path="/Land" component={Land}/>
                 <Route exact path="/Crop" component={Crop}/>
-                <Route exact path="/Metrics" component={Metrics}/>
                   <Route exact path="/Mission" component={Mission}/>
               <Route exact path="/userDashboard" component={UserDashboard}/>
                 <Route exact path="/Farm1" component={Farm1}/>
