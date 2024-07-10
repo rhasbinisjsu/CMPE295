@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, Polygon } from 'react-leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Sidebar from "./Sidebar";
+import { MapPinIcon } from '@heroicons/react/solid';
+import axios from 'axios';
+
 import UserDashboard from "./UserDashboard";
+
 function Farm() {
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,6 +97,21 @@ function Farm() {
     setData([...data, newFarm]);
     closeModal();
   };
+
+  // Custom icon using Heroicons MapPinIcon
+ const customIconHtml = `
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+    </svg>
+  `;
+
+  const customIcon = new L.DivIcon({
+    html: customIconHtml,
+    iconSize: [24, 24],
+    iconAnchor: [12, 24],
+    className: "" // Add your own class name if needed
+  });
 
   return (
     <div className="flex h-screen ">
@@ -207,14 +227,17 @@ function Farm() {
             </button>
           </form>
           <div className="mt-6">
-            <MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: '400px', width: '100%' }}>
+            <MapContainer center={[37.003, -121.557]} zoom={13} style={{ height: '400px', width: '100%' }}>
               <TileLayer
                 url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
               />
               <MapEvents />
               {pins.map((pin, index) => (
-                <Marker key={index} position={pin} />
+                <Marker key={index} position={pin} icon={customIcon} />
               ))}
+              {pins.length === 4 && (
+                <Polygon positions={pins} color="blue" />
+              )}
             </MapContainer>
           </div>
           <div className="mt-4 text-right">
