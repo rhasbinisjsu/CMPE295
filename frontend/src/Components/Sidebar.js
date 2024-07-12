@@ -15,7 +15,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="sidebar flex flex-col justify-between h-6/7">
+    <div className="sidebar flex flex-col justify-between border-t border-r h-6/7">
       <div>
         <nav className="mt-10">
           <Link
