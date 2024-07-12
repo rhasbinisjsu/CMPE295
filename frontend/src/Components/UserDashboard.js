@@ -6,7 +6,7 @@ function UserDashboard() {
 
   return (
     <div className="flex bg-gray-100">
-      <Sidebar />
+
       <div className="flex-1 p-4 mt-5 ">
         {/* Boxes Container */}
         <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 mb-12">

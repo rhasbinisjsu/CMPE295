@@ -1,0 +1,15 @@
+/* src/Components/Sidebar.css */
+.sidebar {
+  width: 250px; /* Adjust width as necessary */
+  background-color: #ffffff; /* Background color */
+  padding: 1rem; /* Padding */
+}
+
+.sidebar nav {
+  flex-grow: 1;
+}
+
+.sidebar button {
+  width: 100%;
+  text-align: left;
+}
