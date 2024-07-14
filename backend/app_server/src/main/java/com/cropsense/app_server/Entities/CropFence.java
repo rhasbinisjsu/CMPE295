@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 @Table(name = "cropFences")
 public class CropFence extends GeoFence {
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private long cropId;
 
     public long getCropId() {

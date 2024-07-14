@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cropsense-metrics-server-service
+spec:
+  type: NodePort
+  selector:
+    app: cropsense-metrics-server
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8001
+      targetPort: 8080
+      nodePort: 30001

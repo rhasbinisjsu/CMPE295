@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cropsense-application-server-configmap
+data:
+  CROPSENSE_RDB_URL: cropsense-rdb.cvko804qsp36.us-east-1.rds.amazonaws.com
+  CROPSENSE_RDB_USER: admin
+  CROPSENSE_RDB_PASSWORD: password
