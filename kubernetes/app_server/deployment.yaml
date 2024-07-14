@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cropsense-application-server-deployment
+  labels:
+    app: cropsense-application-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cropsense-application-server
+  template:
+    metadata:
+      labels:
+        app: cropsense-application-server
+    spec:
+      containers:
+      - name: cropsense-application-server
+        image: cropsense-application-server:0.0.1-SNAPSHOT
+        envFrom:
+          - configMapRef:
+              name: cropsense-application-server-configmap
+        ports:
+        - containerPort: 8080
