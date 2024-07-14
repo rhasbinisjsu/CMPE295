@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 @Table(name = "farmFences")
 public class FarmFence extends GeoFence {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private long farmId;
 
     public long getFarmId() {
