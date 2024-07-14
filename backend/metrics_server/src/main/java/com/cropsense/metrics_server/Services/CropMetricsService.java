@@ -151,13 +151,103 @@ public class CropMetricsService {
     }
     
 
-    // Caluclate % yeild for crop
+    /**
+     * Caluclate % yield for crop
+     * @param cropId
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public float calculateCropYield(long cropId) throws URISyntaxException, IOException, InterruptedException {
+     
+        logger.logInfoMsg("Calculating season yield for crop with ID: " + Long.toString(cropId));
+
+        // collect connection details
+        String connectionHost = appServer.getServerIp();
+        String connectionPort = appServer.getServerPort();
+
+        // get the crop data
+        String cropUrl = "http://" + connectionHost + ":" + connectionPort + cropEndpoints.getBaseUrl() + cropEndpoints.getCropData() + "?cropId=" + Long.toString(cropId);
+        HttpRequest cropDataRequest = httpTransporter.buildRequest(cropUrl);
+        HttpResponse<String> cropDataResponse = httpTransporter.sendRequest(cropDataRequest);
+
+        JSONObject cropJson = new JSONObject(cropDataResponse.body());
+        int plantedCount = Integer.valueOf(cropJson.get("transplantAmount").toString());
+        int cultivatedCount = Integer.valueOf(cropJson.get("cultivatedAmount").toString());
+  
+        // declare and initialize yield
+        float yield = (float) cultivatedCount/plantedCount;
+        yield = yield * 100;
+
+        logger.logInfoMsg("Calculated yield: " + String.valueOf(yield) + "%");
+
+        return yield;
+
+    }
 
 
-    // helper
+    /**
+     * Calculated average crop yield for a species on a farm
+     * @param farmId
+     * @param species
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public float analyzeCropSpeciesYieldByFarm(long farmId, String species) throws URISyntaxException, IOException, InterruptedException {
 
+        logger.logInfoMsg("Analyzing " + species + " grows for farm with ID: " + Long.toString(farmId));
 
-    // Http request
+        // initialize connection details
+        String connectionHost = appServer.getServerIp();
+        String connectionPort = appServer.getServerPort();
+        
+        // Collect crop species planted on farm historically
+        String cropUrl = "http://" + connectionHost + ":" + connectionPort + cropEndpoints.getBaseUrl() + cropEndpoints.getCropBySpeciesForFarm() + "?farmId=" + Long.toString(farmId) + "&species=" + species;
+        HttpRequest cropDataRequest = httpTransporter.buildRequest(cropUrl);
+        HttpResponse<String> cropDataResponse = httpTransporter.sendRequest(cropDataRequest);
+        
+        // collect all cultivated grows
+        JSONArray cropDataArr = new JSONArray(cropDataResponse.body());
+        List<JSONObject> finalizedArr = new ArrayList<>();
+        for (int i = 0; i < cropDataArr.length(); i++) {
+            JSONObject jsonCrop = cropDataArr.getJSONObject(i);
+            String cropStatus = jsonCrop.getString("status");
+            if (cropStatus.equals("cultivated")) {
+                finalizedArr.add(jsonCrop);
+            }
+        }
+
+        logger.logInfoMsg("Cultivated crops collected: " + finalizedArr.toString());
+
+        List<Float> cropYields = new ArrayList<>();
+        for (int i = 0; i < finalizedArr.size(); i++) {
+
+            JSONObject instance = finalizedArr.get(i);
+            String transplantedAmountString = instance.get("transplantAmount").toString();
+            String cultivatedAmountString = instance.get("cultivatedAmount").toString();
+
+            int transplanted = Integer.valueOf(transplantedAmountString);
+            int cultivated =  Integer.valueOf(cultivatedAmountString);
+
+            float instanceYield = (float) cultivated / transplanted;
+            instanceYield = instanceYield * 100;
+
+            cropYields.add(instanceYield);
+        }
+
+        // calculate average yield
+        int arrSize = cropYields.size();
+        float numerator = 0;
+        for (int i = 0; i < arrSize; i++) {
+            numerator = numerator + cropYields.get(i);
+        }
+
+        return numerator / arrSize;
+
+    }
 
 
 }

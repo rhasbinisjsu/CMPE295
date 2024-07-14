@@ -85,7 +85,7 @@ public class SoilMetricService {
         logger.logInfoMsg("Fetching all soil metrics for a crop with ID: " + Long.toString(cropId));
 
         try {
-            List<SoilMetric> smList = smRepo.findByCropId(cropId);
+            List<SoilMetric> smList = smRepo.findByCropIdOrderByCollectionDateAsc(cropId);
             logger.logInfoMsg("Successfully fetched soil metric list for crop with ID: " + Long.toString(cropId));
             return smList;
         }
@@ -114,7 +114,7 @@ public class SoilMetricService {
             for (long cropId : cropIdList) {
                 List<SoilMetric> smListPerCrop = new ArrayList<>();
                 logger.logInfoMsg("Fetching soil metrics for crop with ID: " + Long.toString(cropId));
-                smListPerCrop = smRepo.findByCropId(cropId);
+                smListPerCrop = smRepo.findByCropIdOrderByCollectionDateAsc(cropId);
                 logger.logInfoMsg("Fetched " + String.valueOf(smListPerCrop.size()) + " database entries for crop with ID: " + Long.toString(cropId));
 
                 logger.logInfoMsg("Appending the soil metrics for crop with ID: " + Long.toString(cropId) + " to the return list");

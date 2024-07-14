@@ -8,6 +8,6 @@ import com.cropsense.app_server.Entities.Metrics.SoilMetric;
 
 public interface SoilMetricRepository extends JpaRepository<SoilMetric, Long> {
     
-    List<SoilMetric> findByCropId(long cropId);
+    List<SoilMetric> findByCropIdOrderByCollectionDateAsc(long cropId);
 
 }
