@@ -26,6 +26,15 @@ public class SoilMetricsController {
 
     private final AppLogger logger = new AppLogger(getClass().toString());
 
+    
+    /**
+     * 
+     * @param cropId
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @GetMapping(
         path = "/getIndividualizedMetricsForCrop",
         produces = MediaType.APPLICATION_JSON_VALUE
@@ -33,9 +42,23 @@ public class SoilMetricsController {
     public ResponseEntity<?> getIndividualizedMetricsForCrop(
         @RequestParam long cropId
     ) throws URISyntaxException, IOException, InterruptedException {
-        logger.logInfoMsg("[ ENTER ] Receieved request");
-        HashMap<String,List<String>> responseMap = smService.getIndividualSoilMetricsForCrop(cropId);
-        return new ResponseEntity<HashMap<String,List<String>>>(responseMap, HttpStatus.OK);
+        
+        logger.logInfoMsg("[ ENTER ] Receieved request to get individualized soil metrics for crop with ID: " + Long.toString(cropId));
+        ResponseEntity<?> response;
+
+        try {
+            HashMap<String,List<HashMap<String,String>>> responseHash = smService.getIndividualSoilMetricsForCrop(cropId);
+            response = new ResponseEntity<HashMap<String,List<HashMap<String,String>>>>(responseHash, HttpStatus.OK);
+        }
+        catch (Exception e) {
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.logErrorMsg("Caught exception... Failed to fetch and generate individualized metrics \n Reason: " + e.getMessage());
+            throw e;
+        }
+
+        logger.logInfoMsg("[ EXIT ] Exiting request to get individualized soil metrics for crop with ID: " + Long.toString(cropId));
+        return response;
+
     }
     
 }

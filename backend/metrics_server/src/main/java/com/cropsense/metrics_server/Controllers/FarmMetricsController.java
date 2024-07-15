@@ -52,7 +52,7 @@ public class FarmMetricsController {
             response = new ResponseEntity<String>(String.valueOf(farmCount), HttpStatus.OK);
         }
         catch (Exception e) {
-            System.out.println("Caught Exception... " + e.getCause() + "\nReason: " + e.getMessage());
+            logger.logErrorMsg("Caught Exception... " + e.getCause() + "\nReason: " + e.getMessage());
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             throw e; 
         }

@@ -26,12 +26,20 @@ public class SoilMetricsService {
 
     private HttpTransporter httpTransporter = new HttpTransporter();
     private final AppLogger logger = new AppLogger(getClass().toString());
-
     private final SoilMetricEndpoints smEndpoints = new SoilMetricEndpoints();
 
 
-    // return individual metrics in hashmap for a crop - they must be sorted by date
-    public HashMap<String,List<String>> getIndividualSoilMetricsForCrop(long cropId) throws URISyntaxException, IOException, InterruptedException {
+    /**
+     * Get indivualized soil metrics for a crop by its ID
+     * @param cropId
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public HashMap<String,List<HashMap<String,String>>> getIndividualSoilMetricsForCrop(
+        long cropId
+    ) throws URISyntaxException, IOException, InterruptedException {
 
         logger.logInfoMsg("Getting individual soul metrics for crop with ID: " + Long.toString(cropId));
 
@@ -45,39 +53,52 @@ public class SoilMetricsService {
         HttpResponse<String> responseSoilMetrics = httpTransporter.sendRequest(requestSoilMetrics);
         JSONArray soilMetricsArr = new JSONArray(responseSoilMetrics.body());
         
-        List<String> moistureArr = new ArrayList<>();
-        List<String> phLevelArr = new ArrayList<>();
-        List<String> nitorgenLevelArr = new ArrayList<>();
-        List<String> phosphorousLevelArr = new ArrayList<>();
-        List<String> potassiumLevelArr = new ArrayList<>();
+        List<HashMap<String,String>> moistureArr = new ArrayList<>();
+        List<HashMap<String,String>> phLevelArr = new ArrayList<>();
+        List<HashMap<String,String>> nitorgenLevelArr = new ArrayList<>();
+        List<HashMap<String,String>> phosphorousLevelArr = new ArrayList<>();
+        List<HashMap<String,String>> potassiumLevelArr = new ArrayList<>();
 
         for (int i = 0; i < soilMetricsArr.length(); i++) {
             JSONObject dataPoint = soilMetricsArr.getJSONObject(i);
+
+            String date = dataPoint.get("collectionDate").toString();
             
             String moisture = dataPoint.get("soilMoisture").toString();
-            moistureArr.add(moisture);
+            HashMap<String,String> moistureHash = new HashMap<>();
+            moistureHash.put(date, moisture);
+            moistureArr.add(moistureHash);
 
             String ph = dataPoint.get("phLevel").toString();
-            phLevelArr.add(ph);
+            HashMap<String,String> phHash = new HashMap<>();
+            phHash.put(date, ph); 
+            phLevelArr.add(phHash);
 
             String nitrogen = dataPoint.get("nitrogenLevel").toString();
-            nitorgenLevelArr.add(nitrogen);
+            HashMap<String,String> nitrogenHash = new HashMap<>();
+            nitrogenHash.put(date, nitrogen);
+            nitorgenLevelArr.add(nitrogenHash);
 
             String phosphorous = dataPoint.get("phosphorousLevel").toString();
-            phosphorousLevelArr.add(phosphorous);
+            HashMap<String,String> phosphorousHash = new HashMap<>();
+            phosphorousHash.put(date,phosphorous);
+            phosphorousLevelArr.add(phosphorousHash);
 
             String potassium = dataPoint.get("potassiumLevel").toString();
-            potassiumLevelArr.add(potassium);
+            HashMap<String,String> potassiumHash = new HashMap<>();
+            potassiumHash.put(date, potassium);
+            potassiumLevelArr.add(potassiumHash);
         }
 
         // init the new response hashmap
-        HashMap<String,List<String>> responseMap = new HashMap<>();
+        HashMap<String,List<HashMap<String,String>>> responseMap = new HashMap<>();
         responseMap.put("moisture", moistureArr);
         responseMap.put("ph", phLevelArr);
         responseMap.put("nitrogen", nitorgenLevelArr);
         responseMap.put("phosphorous", phosphorousLevelArr);
         responseMap.put("potassium", potassiumLevelArr);
 
+        logger.logInfoMsg("Generated HashMap of individualized metrics");
         return responseMap;
 
     }
