@@ -2,6 +2,7 @@
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Dropdown from 'react-bootstrap/Dropdown';
+import Sidebar from './Sidebar';
 
 import { Grid } from '@mui/material'
 import logo from './styles/Crop.png'
