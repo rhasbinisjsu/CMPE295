@@ -13,7 +13,7 @@ import UserDashboard from './Components/UserDashboard';
 import Farm from './Components/Farm';
 import Crop from './Components/Crop';
 import Mission from './Components/Mission';
-import Farm1 from './Components/Farm1';
+// import Farm1 from './Components/Farm1';
 import Header from './Components/Header';
 
 
@@ -51,11 +51,10 @@ function App(){
               <Route exact path="/" component={Homepage}/>
               <Route exact path="/userLogin" component={UserLogin}/>
               <Route exact path="/userSignUp" component={UserSignup}/>
-                <Route exact path="/Farm" component={Farm}/>
-                <Route exact path="/Crop" component={Crop}/>
-                  <Route exact path="/Mission" component={Mission}/>
+              <Route exact path="/Farm" component={Farm}/>
+              <Route exact path="/Crop" component={Crop}/>
+              <Route exact path="/Mission" component={Mission}/>
               <Route exact path="/userDashboard" component={UserDashboard}/>
-                <Route exact path="/Farm1" component={Farm1}/>
               </Switch>
               </BrowserRouter>
             </div>
@@ -65,4 +64,5 @@ function App(){
   );
 }
 
+// <Route exact path="/Farm1" component={Farm1}/>
 export default App;
