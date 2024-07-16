@@ -15,6 +15,8 @@ import Crop from './Components/Crop';
 import Mission from './Components/Mission';
 import Farm1 from './Components/Farm1';
 import Header from './Components/Header';
+import FarmDetail from './Components/FarmDetail';
+import Sidebar from "./Components/Sidebar";
 
 
 
@@ -41,27 +43,29 @@ import Header from './Components/Header';
 // }
 
 function App(){
-  return(
-      <div className="flex flex-col h-screen">
-        <Header />
-        <main className="flex-1 overflow-auto p-4">
-             <div>
-              <BrowserRouter>
+return (
+    <div className="flex flex-col h-screen">
+      <Header />
+      <BrowserRouter>
+          <div className="flex flex-1">
+            <Sidebar />
+            <main className="flex-1 overflow-auto p-4">
               <Switch>
-              <Route exact path="/" component={Homepage}/>
-              <Route exact path="/userLogin" component={UserLogin}/>
-              <Route exact path="/userSignUp" component={UserSignup}/>
-                <Route exact path="/Farm" component={Farm}/>
-                <Route exact path="/Crop" component={Crop}/>
-                  <Route exact path="/Mission" component={Mission}/>
-              <Route exact path="/userDashboard" component={UserDashboard}/>
-                <Route exact path="/Farm1" component={Farm1}/>
+                <Route exact path="/" component={Homepage} />
+                <Route exact path="/userLogin" component={UserLogin} />
+                <Route exact path="/userSignUp" component={UserSignup} />
+                <Route exact path="/userDashboard" component={UserDashboard} />
+                <Route exact path="/Farm" component={Farm} />
+                <Route exact path="/Crop" component={Crop} />
+                <Route exact path="/Mission" component={Mission} />
+                <Route exact path="/Farm1" component={Farm1} />
+                <Route exact path="/farmDetail/:id" component={FarmDetail} />
               </Switch>
-              </BrowserRouter>
-            </div>
-        </main>
-    </div>
+            </main>
+          </div>
 
+      </BrowserRouter>
+    </div>
   );
 }
 
