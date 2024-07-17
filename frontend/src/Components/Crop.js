@@ -119,8 +119,8 @@ function Crop() {
 
   useEffect(() => {
     const farmId = sessionStorage.getItem('farmId');
-    // axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=${farmId}`)
-    axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=1`)
+    axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=${farmId}`)
+    // axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=1`)
       .then(response => {
         setCrops(response.data);
       })

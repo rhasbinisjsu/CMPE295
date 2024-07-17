@@ -15,6 +15,7 @@ import Crop from './Components/Crop';
 import Mission from './Components/Mission';
 // import Farm1 from './Components/Farm1';
 import Header from './Components/Header';
+import Crops from './Components/Crops';
 
 
 
@@ -55,6 +56,7 @@ function App(){
               <Route exact path="/Crop" component={Crop}/>
               <Route exact path="/Mission" component={Mission}/>
               <Route exact path="/userDashboard" component={UserDashboard}/>
+              <Route exact path="/crops"component={Crops}/>
               </Switch>
               </BrowserRouter>
             </div>

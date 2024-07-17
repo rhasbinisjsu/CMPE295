@@ -797,6 +797,289 @@
 
 //----------------------------------------------------
 
+// import React, { useState, useEffect } from "react";
+// import Modal from 'react-modal';
+// import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+// import L from 'leaflet';
+// import 'leaflet/dist/leaflet.css';
+// import Sidebar from "./Sidebar";
+// import axios from 'axios';
+
+// function Farm() {
+//   const [data, setData] = useState([]);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [form, setForm] = useState({
+//     name: '',
+//     street: '',
+//     city: '',
+//     zip: '',
+//   });
+//   const [pins, setPins] = useState([]);
+
+//   useEffect(() => {
+//     const ownerId = sessionStorage.getItem('userId');
+//     axios.get(`http://localhost:8080/CropSense/AppServer/FarmController/fetchFarmsForOwner?ownerId=${ownerId}`)
+//       .then(response => {
+//         setData(response.data);
+//       })
+//       .catch(error => {
+//         console.error('There was an error fetching the farms data!', error);
+//       });
+//   }, []);
+
+//   // const handleView = (id) => {
+//   //   alert(`View Farm with ID: ${id}`);
+//   //   // Implement view logic here
+//   // };
+
+//   const handleView = (id) => {
+//     sessionStorage.setItem('farmId', id); // Store the farmId in session storage
+//     navigate('/crops'); // Redirect to the crops page
+//   };
+
+//   const handleDelete = (id) => {
+//     alert(`Delete Farm with ID: ${id}`);
+//     // Implement delete logic here
+//   };
+
+//   const openModal = () => {
+//     setIsModalOpen(true);
+//   };
+
+//   const closeModal = () => {
+//     setIsModalOpen(false);
+//     setForm({ name: '', street: '', city: '', zip: '' });
+//     setPins([]);
+//   };
+
+//   const handleChange = (e) => {
+//     setForm({
+//       ...form,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   const handleCenterFarm = () => {
+//     // Center the map based on the address
+//     // You can use a geocoding service to get coordinates from the address
+//   };
+
+//   const addPin = (e) => {
+//     if (pins.length < 4) {
+//       setPins([...pins, e.latlng]);
+//     }
+//   };
+
+//   const MapEvents = () => {
+//     useMapEvents({
+//       click: addPin,
+//     });
+//     return null;
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+  
+//     // Fetch ownerId from sessionStorage
+//     const ownerId = sessionStorage.getItem('userId');
+  
+//     // Construct the new farm object
+//     const newFarm = {
+//       ownerId: ownerId,
+//       name: form.name,
+//       address: {
+//         line1: form.street,
+//         line2: '',
+//         city: form.city,
+//         state: '', // Assuming your form doesn't capture state explicitly
+//         zip: form.zip,
+//         country: 'USA', // Assuming default country is USA
+//       },
+//       pins: pins, // Include pins data in the payload if needed
+//     };
+  
+//     try {
+//       // Make POST request to createFarm endpoint
+//       const response = await axios.post('http://localhost:8080/CropSense/AppServer/FarmController/createFarm', newFarm);
+      
+//       // Update state with the new farm data
+//       setData([...data, response.data]);
+  
+//       // Close the modal after successful creation
+//       window.location.reload();
+//       closeModal();
+      
+//     } catch (error) {
+//       console.error('Error creating farm:', error);
+//       // Handle error, show user alert, etc.
+//       window.alert('Failed to create farm');
+//     }
+//   };
+  
+
+//   // Custom icon using Heroicons MapPinIcon
+//   const customIconHtml = `
+//     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
+//       <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+//       <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+//     </svg>
+//   `;
+
+//   const customIcon = new L.DivIcon({
+//     html: customIconHtml,
+//     iconSize: [24, 24],
+//     iconAnchor: [12, 24],
+//     className: "" // Add your own class name if needed
+//   });
+
+//   return (
+//     <div className="flex h-screen">
+//       <Sidebar />
+//       <div className="flex-1 flex justify-center items-start pt-40">
+//         <div className="w-3/4">
+//           <div className="relative">
+//             {/* Create Farm Button */}
+//             <button
+//               className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-indigo-500 text-white py-2 px-4 rounded shadow hover:bg-indigo-700"
+//               onClick={openModal}
+//             >
+//               Create Farm
+//             </button>
+//           </div>
+//           {/* Table for showcasing farms */}
+//           <div className="mt-16">
+//             <h1 className="text-3xl font-bold mb-4">Farms</h1>
+//             <table className="min-w-full bg-white">
+//               <thead>
+//                 <tr>
+//                   <th className="py-2 px-4 border-b">ID</th>
+//                   <th className="py-2 px-4 border-b">Name</th>
+//                   <th className="py-2 px-4 border-b">Address</th>
+//                   <th className="py-2 px-4 border-b">Actions</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {data.map((farm) => (
+//                   <tr key={farm.id}>
+//                     <td className="py-4 px-4 border-b text-center">{farm.id}</td>
+//                     <td className="py-4 px-4 border-b text-center">{farm.name}</td>
+//                     <td className="py-4 px-4 border-b text-center">
+//                       {farm.address.line1}, {farm.address.city}, {farm.address.state} {farm.address.zip}
+//                     </td>
+//                     <td className="py-4 px-4 border-b text-center">
+//                       <button
+//                         className="bg-indigo-500 text-white py-1 px-3 rounded mr-8 hover:bg-indigo-700"
+//                         onClick={() => handleView(farm.id)}
+//                       >
+//                         View
+//                       </button>
+//                       <button
+//                         className="bg-indigo-500 text-white py-1 px-3 rounded hover:bg-indigo-700"
+//                         onClick={() => handleDelete(farm.id)}
+//                       >
+//                         Delete
+//                       </button>
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           </div>
+//         </div>
+//       </div>
+//       <Modal
+//         isOpen={isModalOpen}
+//         onRequestClose={closeModal}
+//         contentLabel="Create Farm"
+//         className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
+//         ariaHideApp={false}
+//       >
+//         <div className="bg-white p-6 rounded-lg w-1/2">
+//           <h2 className="text-3xl mb-4 font-bold">Create Farm</h2>
+//           <form onSubmit={handleSubmit}>
+//             <div className="mb-2 w-1/2">
+//               <label className="block text-gray-700 text-sm font-bold mb-2">Farm Name</label>
+//               <input
+//                 type="text"
+//                 name="name"
+//                 value={form.name}
+//                 onChange={handleChange}
+//                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+//               />
+//             </div>
+//             <div className="mb-2">
+//               <label className="block text-gray-700 text-sm font-bold mb-2">Street</label>
+//               <input
+//                 type="text"
+//                 name="street"
+//                 value={form.street}
+//                 onChange={handleChange}
+//                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+//               />
+//             </div>
+//             <div className="flex space-x-4">
+//               <div className="mb-2 w-3/5 mr-4">
+//                 <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
+//                 <input
+//                   type="text"
+//                   name="city"
+//                   value={form.city}
+//                   onChange={handleChange}
+//                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+//                 />
+//               </div>
+//               <div className="mb-2 w-2/5">
+//                 <label className="block text-gray-700 text-sm font-bold mb-2">Zip Code</label>
+//                 <input
+//                   type="text"
+//                   name="zip"
+//                   value={form.zip}
+//                   onChange={handleChange}
+//                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+//                 />
+//               </div>
+//             </div>
+//             <button
+//               type="button"
+//               onClick={handleCenterFarm}
+//               className="bg-indigo-400 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
+//             >
+//               Center Farm
+//             </button>
+//             <div className="mt-6">
+//               <MapContainer center={[37.003, -121.557]} zoom={13} style={{ height: '400px' }}>
+//                 <TileLayer
+//                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+//                 />
+//                 <MapEvents />
+//                 {/* Render pins on the map */}
+//                 {pins.map((pin, index) => (
+//                   <Marker key={index} position={pin} icon={customIcon} />
+//                 ))}
+//               </MapContainer>
+//             </div>
+//             <button
+//               type="submit"
+//               className="mt-4 bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700"
+//             >
+//               Create Farm
+//             </button>
+//             <button
+//               type="button"
+//               onClick={closeModal}
+//               className="mt-4 ml-4 bg-red-500 text-white py-2 px-4 rounded shadow hover:bg-red-700"
+//             >
+//               Cancel
+//             </button>
+//           </form>
+//         </div>
+//       </Modal>
+//     </div>
+//   );
+// }
+
+// export default Farm;
+
 import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
@@ -804,6 +1087,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Sidebar from "./Sidebar";
 import axios from 'axios';
+import {Routes, Route, useHistory} from 'react-router-dom'
 
 function Farm() {
   const [data, setData] = useState([]);
@@ -815,6 +1099,8 @@ function Farm() {
     zip: '',
   });
   const [pins, setPins] = useState([]);
+  const history = useHistory();
+
 
   useEffect(() => {
     const ownerId = sessionStorage.getItem('userId');
@@ -828,8 +1114,8 @@ function Farm() {
   }, []);
 
   const handleView = (id) => {
-    alert(`View Farm with ID: ${id}`);
-    // Implement view logic here
+    sessionStorage.setItem('farmId', id); // Store the farmId in session storage
+    history.push("/crops")
   };
 
   const handleDelete = (id) => {
@@ -910,7 +1196,6 @@ function Farm() {
       window.alert('Failed to create farm');
     }
   };
-  
 
   // Custom icon using Heroicons MapPinIcon
   const customIconHtml = `
@@ -1013,7 +1298,7 @@ function Farm() {
               />
             </div>
             <div className="flex space-x-4">
-              <div className="mb-2 w-3/5 mr-4">
+              <div className="mb-2 w-3/5 mr-2">
                 <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
                 <input
                   type="text"
@@ -1024,7 +1309,7 @@ function Farm() {
                 />
               </div>
               <div className="mb-2 w-2/5">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Zip Code</label>
+                <label className="block text-gray-700 text-sm font-bold mb-2">Zip</label>
                 <input
                   type="text"
                   name="zip"
@@ -1037,7 +1322,7 @@ function Farm() {
             <button
               type="button"
               onClick={handleCenterFarm}
-              className="bg-indigo-400 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
+              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
             >
               Center Farm
             </button>
@@ -1074,5 +1359,4 @@ function Farm() {
 }
 
 export default Farm;
-
 
