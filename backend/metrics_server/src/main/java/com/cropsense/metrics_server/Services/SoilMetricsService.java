@@ -16,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -65,33 +66,33 @@ public class SoilMetricsService {
             String date = dataPoint.get("collectionDate").toString();
             
             String moisture = dataPoint.get("soilMoisture").toString();
-            HashMap<String,String> moistureHash = new HashMap<>();
+            HashMap<String,String> moistureHash = new LinkedHashMap<>();
             moistureHash.put(date, moisture);
             moistureArr.add(moistureHash);
 
             String ph = dataPoint.get("phLevel").toString();
-            HashMap<String,String> phHash = new HashMap<>();
+            HashMap<String,String> phHash = new LinkedHashMap<>();
             phHash.put(date, ph); 
             phLevelArr.add(phHash);
 
             String nitrogen = dataPoint.get("nitrogenLevel").toString();
-            HashMap<String,String> nitrogenHash = new HashMap<>();
+            HashMap<String,String> nitrogenHash = new LinkedHashMap<>();
             nitrogenHash.put(date, nitrogen);
             nitorgenLevelArr.add(nitrogenHash);
 
             String phosphorous = dataPoint.get("phosphorousLevel").toString();
-            HashMap<String,String> phosphorousHash = new HashMap<>();
+            HashMap<String,String> phosphorousHash = new LinkedHashMap<>();
             phosphorousHash.put(date,phosphorous);
             phosphorousLevelArr.add(phosphorousHash);
 
             String potassium = dataPoint.get("potassiumLevel").toString();
-            HashMap<String,String> potassiumHash = new HashMap<>();
+            HashMap<String,String> potassiumHash = new LinkedHashMap<>();
             potassiumHash.put(date, potassium);
             potassiumLevelArr.add(potassiumHash);
         }
 
         // init the new response hashmap
-        HashMap<String,List<HashMap<String,String>>> responseMap = new HashMap<>();
+        HashMap<String,List<HashMap<String,String>>> responseMap = new LinkedHashMap<>();
         responseMap.put("moisture", moistureArr);
         responseMap.put("ph", phLevelArr);
         responseMap.put("nitrogen", nitorgenLevelArr);
