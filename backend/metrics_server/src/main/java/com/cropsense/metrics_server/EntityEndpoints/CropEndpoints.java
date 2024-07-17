@@ -6,6 +6,7 @@ public class CropEndpoints {
     private final String fetchAllCropsForFarm =  "/fetchAllCropsForFarm";
     private final String fetchActiveCropsForFarm = "/fetchActiveCropsForFarm";
     private final String fetchCropForFarmBySpecies = "/fetchCropForFarmBySpecies";
+    private final String fetchCropData = "/fetchCropById";
 
     public String getBaseUrl() {
         return this.baseUrl;
@@ -21,6 +22,10 @@ public class CropEndpoints {
 
     public String getCropBySpeciesForFarm() {
         return this.fetchCropForFarmBySpecies;
+    }
+
+    public String getCropData() {
+        return this.fetchCropData;
     }
 
 }

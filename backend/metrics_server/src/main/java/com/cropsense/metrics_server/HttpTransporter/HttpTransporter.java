@@ -16,7 +16,7 @@ public class HttpTransporter {
     
 
     /**
-     * 
+     * Build the http request
      * @param url
      * @return
      * @throws URISyntaxException
@@ -38,7 +38,7 @@ public class HttpTransporter {
 
 
     /**
-     * 
+     * Send the http request and return the response
      * @param request
      * @return
      * @throws IOException
@@ -53,7 +53,7 @@ public class HttpTransporter {
         // build response
         HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
         
-        logger.logInfoMsg("Received response: \n" + response.body());
+        logger.logInfoMsg("Received response:   " + response.body());
         
         return response;
 

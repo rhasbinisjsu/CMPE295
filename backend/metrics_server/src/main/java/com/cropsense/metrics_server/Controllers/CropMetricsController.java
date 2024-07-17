@@ -94,5 +94,74 @@ public class CropMetricsController {
     }
 
 
+    /**
+     * 
+     * @param cropId
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @GetMapping(
+        path = "/getCropYield",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getCropYield(
+        @RequestParam long cropId
+    ) throws URISyntaxException, IOException, InterruptedException {
+
+        logger.logInfoMsg("[ ENTER ] Received request to calculate % yield for crop with ID: " + Long.toString(cropId));
+        ResponseEntity<?> response;
+
+        try {
+            float yield = cmService.calculateCropYield(cropId);
+            response = new ResponseEntity<String>(String.valueOf(yield), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            logger.logErrorMsg("Caught Exception... " + e.getCause() + "\nReason: " + e.getMessage());
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw e;
+        }
+
+        logger.logInfoMsg("[ EXIT ] Exiting request to calculate % yield for crop with ID: " + Long.toString(cropId));
+        return response;
+    }
+
+
+    /**
+     * 
+     * @param farmId
+     * @param species
+     * @return
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @GetMapping(
+        path = "/analyzeFarmCropSpeciesYield",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> analyzeFarmCropSpeciesYield(
+        @RequestParam long farmId,
+        @RequestParam String species
+    ) throws URISyntaxException, IOException, InterruptedException {
+
+        logger.logInfoMsg("[ ENTER ] Received request to analyze " + species + " crop yields at farm with ID: " + Long.toString(farmId));
+        ResponseEntity<?> response;
+
+        try {
+            float averageYield = cmService.analyzeCropSpeciesYieldByFarm(farmId, species);
+            response = new ResponseEntity<String>(String.valueOf(averageYield), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            logger.logErrorMsg("Caught Exception... " + e.getCause() + "\nReason: " + e.getMessage());
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw e;
+        }
+
+        logger.logInfoMsg("[ EXIT ] Exiting request to analyze " + species + " crop yields at farm with ID: " + Long.toString(farmId));
+        return response;
+
+    }
     
 }
