@@ -17,6 +17,7 @@ import Farm1 from './Components/Farm1';
 import Header from './Components/Header';
 import FarmDetail from './Components/FarmDetail';
 import Sidebar from "./Components/Sidebar";
+import CropDetail from './Components/CropDetail';
 
 
 
@@ -60,6 +61,8 @@ return (
                 <Route exact path="/Mission" component={Mission} />
                 <Route exact path="/Farm1" component={Farm1} />
                 <Route exact path="/farmDetail/:id" component={FarmDetail} />
+                <Route exact path="/CropDetail" component={CropDetail} />
+
               </Switch>
             </main>
           </div>

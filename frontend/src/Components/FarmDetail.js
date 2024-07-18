@@ -8,32 +8,11 @@ const FarmDetail = () => {
 
   useEffect(() => {
     // Mock data for initial design
-    const mockData = {
-      name: 'Mock Farm',
-      lineChartData: [
-        {
-          name: 'Metric 1',
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-        },
-        {
-          name: 'Metric 2',
-          data: [20, 30, 40, 60, 70, 80, 90, 100, 110],
-        },
-        {
-          name: 'Metric 3',
-          data: [5, 15, 25, 35, 45, 55, 65, 75, 85],
-        },
-        {
-          name: 'Metric 4',
-          data: [30, 40, 50, 60, 70, 80, 90, 100, 110],
-        },
-        {
-          name: 'Metric 5',
-          data: [15, 25, 35, 45, 55, 65, 75, 85, 95],
-        },
-      ],
+    const mockData = [
+      { title: 'Soil Metric 1', data: [10, 20, 30, 40, 50] },
+      { title: 'Soil Metric 2', data: [15, 25, 35, 45, 55] },
 
-    };
+    ];
     setFarm(mockData);
   }, []);
 
@@ -54,9 +33,7 @@ const FarmDetail = () => {
       <div className="relative flex flex-col bg-clip-border w-2/3 rounded-xl bg-white text-gray-700 shadow-md">
         <LineGraph
           title="Soil Analysis"
-          percentage={farm.percentage}
-          comparisonText={farm.comparisonText}
-          lineChartData={farm.lineChartData}
+          lineChartData={farm.data}
         />
       </div>
     </div>

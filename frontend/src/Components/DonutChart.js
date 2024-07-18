@@ -54,7 +54,7 @@ const DonutChart = () => {
         shade: 'light',
         type: 'horizontal', // 'horizontal' or 'vertical'
         shadeIntensity: 0.5,
-        gradientToColors: ["#4DA1FF", "#4D7F1F", "#FF7D05", "#E323FF"], // Gradient end colors
+        gradientToColors: ["#4DA1FF", "#7517F8", "#FFD422", "#E323FF"], // Gradient end colors
         inverseColors: false,
         opacityFrom: 0.11,
         opacityTo: 1,

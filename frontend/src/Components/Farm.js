@@ -6,10 +6,12 @@ import 'leaflet/dist/leaflet.css';
 import Sidebar from "./Sidebar";
 import { MapPinIcon } from '@heroicons/react/solid';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 import UserDashboard from "./UserDashboard";
 
 function Farm() {
+  const history = useHistory();
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({
@@ -33,6 +35,8 @@ function Farm() {
 
   const handleView = (id) => {
     alert(`View Farm with ID: ${id}`);
+    history.push(`/farmDetail/${id}`);
+
     // Implement view logic here
   };
 
@@ -115,7 +119,6 @@ function Farm() {
 
   return (
     <div className="flex h-screen ">
-      <Sidebar />
       <div className="flex-1 flex justify-center items-start pt-40">
         <div className="w-3/4">
           <div className="relative">

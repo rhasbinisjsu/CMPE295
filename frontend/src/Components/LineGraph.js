@@ -1,19 +1,22 @@
 import React from 'react';
 import Chart from 'react-apexcharts';
 
-const LineGraph = ({ title, percentage, comparisonText, lineChartData }) => {
-  console.log('lineChartData:', lineChartData); // Add this line for debugging
+const LineGraph = ({ title,data }) => {
 
   const chartOptions = {
     chart: {
       type: 'line',
-      height: 320,
       width: '100%',
     },
     stroke: {
       curve: 'smooth',
     },
-    series: lineChartData,
+    series: [
+      {
+        name: title,
+        data: data,
+      }
+    ],
     xaxis: {
       categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
     },
