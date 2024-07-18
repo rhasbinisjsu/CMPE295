@@ -13,9 +13,11 @@ import UserDashboard from './Components/UserDashboard';
 import Farm from './Components/Farm';
 import Crop from './Components/Crop';
 import Mission from './Components/Mission';
-// import Farm1 from './Components/Farm1';
 import Header from './Components/Header';
 import Crops from './Components/Crops';
+import FarmDetail from './Components/FarmDetail';
+import Sidebar from "./Components/Sidebar";
+import CropDetail from './Components/CropDetail';
 
 
 
@@ -42,12 +44,13 @@ import Crops from './Components/Crops';
 // }
 
 function App(){
-  return(
-      <div className="flex flex-col h-screen">
-        <Header />
-        <main className="flex-1 overflow-auto p-4">
-             <div>
-              <BrowserRouter>
+return (
+    <div className="flex flex-col h-screen">
+      <Header />
+      <BrowserRouter>
+          <div className="flex flex-1">
+            <Sidebar />
+            <main className="flex-1 overflow-auto p-4">
               <Switch>
               <Route exact path="/" component={Homepage}/>
               <Route exact path="/userLogin" component={UserLogin}/>
@@ -57,14 +60,15 @@ function App(){
               <Route exact path="/Mission" component={Mission}/>
               <Route exact path="/userDashboard" component={UserDashboard}/>
               <Route exact path="/crops"component={Crops}/>
+              <Route exact path="/farmDetail/:id" component={FarmDetail} />
+              <Route exact path="/CropDetail" component={CropDetail} />
               </Switch>
-              </BrowserRouter>
+              </main>
             </div>
-        </main>
+            </BrowserRouter>
     </div>
-
+    
   );
 }
 
-// <Route exact path="/Farm1" component={Farm1}/>
 export default App;

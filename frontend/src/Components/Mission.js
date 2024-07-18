@@ -110,7 +110,7 @@ function Mission() {
 
   return (
     <div className="flex h-screen ">
-      <Sidebar />
+
       <div className="flex-1 flex justify-center items-start pt-40">
         <div className="w-3/4">
           <div className="relative">
