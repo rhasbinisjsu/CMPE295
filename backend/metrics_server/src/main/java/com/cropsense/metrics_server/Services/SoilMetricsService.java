@@ -14,10 +14,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 @Service
 public class SoilMetricsService {
@@ -29,7 +27,7 @@ public class SoilMetricsService {
     private final AppLogger logger = new AppLogger(getClass().toString());
     private final SoilMetricEndpoints smEndpoints = new SoilMetricEndpoints();
 
-
+    
     /**
      * Get indivualized soil metrics for a crop by its ID
      * @param cropId
@@ -38,7 +36,7 @@ public class SoilMetricsService {
      * @throws IOException
      * @throws InterruptedException
      */
-    public HashMap<String,List<HashMap<String,String>>> getIndividualSoilMetricsForCrop(
+    public HashMap<String,HashMap<String,String>> getIndividualSoilMetricsForCrop(
         long cropId
     ) throws URISyntaxException, IOException, InterruptedException {
 
@@ -53,55 +51,101 @@ public class SoilMetricsService {
         HttpRequest requestSoilMetrics = httpTransporter.buildRequest(getCropSoilMetricsUrl);
         HttpResponse<String> responseSoilMetrics = httpTransporter.sendRequest(requestSoilMetrics);
         JSONArray soilMetricsArr = new JSONArray(responseSoilMetrics.body());
-        
-        List<HashMap<String,String>> moistureArr = new ArrayList<>();
-        List<HashMap<String,String>> phLevelArr = new ArrayList<>();
-        List<HashMap<String,String>> nitorgenLevelArr = new ArrayList<>();
-        List<HashMap<String,String>> phosphorousLevelArr = new ArrayList<>();
-        List<HashMap<String,String>> potassiumLevelArr = new ArrayList<>();
+
+        HashMap<String,String> moistureHash = new LinkedHashMap<>();
+        HashMap<String,String> phHash = new LinkedHashMap<>();
+        HashMap<String,String> nitrogenHash = new LinkedHashMap<>();
+        HashMap<String,String> phosphorousHash = new LinkedHashMap<>();
+        HashMap<String,String> potassiumHash = new LinkedHashMap<>();
+
 
         for (int i = 0; i < soilMetricsArr.length(); i++) {
-            JSONObject dataPoint = soilMetricsArr.getJSONObject(i);
 
-            String date = dataPoint.get("collectionDate").toString();
-            
-            String moisture = dataPoint.get("soilMoisture").toString();
-            HashMap<String,String> moistureHash = new LinkedHashMap<>();
-            moistureHash.put(date, moisture);
-            moistureArr.add(moistureHash);
+            // get the datapoint
+            JSONObject datapoint = soilMetricsArr.getJSONObject(i);
 
-            String ph = dataPoint.get("phLevel").toString();
-            HashMap<String,String> phHash = new LinkedHashMap<>();
-            phHash.put(date, ph); 
-            phLevelArr.add(phHash);
+            // get the date
+            String date = datapoint.get("collectionDate").toString();
 
-            String nitrogen = dataPoint.get("nitrogenLevel").toString();
-            HashMap<String,String> nitrogenHash = new LinkedHashMap<>();
-            nitrogenHash.put(date, nitrogen);
-            nitorgenLevelArr.add(nitrogenHash);
+            // moisture metric
+            String moisture = datapoint.get("soilMoisture").toString();
+            if (moistureHash.containsKey(date)) {
+                float storedMoisture = Float.valueOf(moistureHash.get(date));
+                float currentMoisture = Float.valueOf(moisture);
 
-            String phosphorous = dataPoint.get("phosphorousLevel").toString();
-            HashMap<String,String> phosphorousHash = new LinkedHashMap<>();
-            phosphorousHash.put(date,phosphorous);
-            phosphorousLevelArr.add(phosphorousHash);
+                float averageMoist = (float) (storedMoisture + currentMoisture) / 2;
+                moistureHash.replace(date, String.valueOf(averageMoist));
+            }
+            else {
+                moistureHash.put(date, moisture);
+            }
 
-            String potassium = dataPoint.get("potassiumLevel").toString();
-            HashMap<String,String> potassiumHash = new LinkedHashMap<>();
-            potassiumHash.put(date, potassium);
-            potassiumLevelArr.add(potassiumHash);
+            // ph metric
+            String pH = datapoint.get("phLevel").toString();
+            if (phHash.containsKey(date)) {
+                float storedPh = Float.valueOf(phHash.get(date));
+                float currentpH = Float.valueOf(pH);
+
+                float averagePh = (float) (storedPh + currentpH) / 2;
+                phHash.replace(date, String.valueOf(averagePh));
+            }
+            else {
+                phHash.put(date, pH);
+            }
+
+            // nitrogen metric
+            String nitrogen = datapoint.get("nitrogenLevel").toString();
+            if (nitrogenHash.containsKey(date)) {
+                float storedNitro = Float.valueOf(nitrogenHash.get(date));
+                float currentNitro = Float.valueOf(nitrogen);
+
+                float averageNitro = (float) (storedNitro + currentNitro) / 2;
+                nitrogenHash.replace(date, String.valueOf(averageNitro));
+            }
+            else {
+                nitrogenHash.put(date, nitrogen);
+            }
+
+            // phophorous metric
+            String phosphorous = datapoint.get("phosphorousLevel").toString();
+            if (phosphorousHash.containsKey(date)) {
+                float storedPhos = Float.valueOf(phosphorousHash.get(date));
+                float currentPhos = Float.valueOf(phosphorous);
+
+                float averagePhos = (float) (storedPhos + currentPhos) / 2;
+                phosphorousHash.replace(date, String.valueOf(averagePhos));
+            }
+            else {
+                phosphorousHash.put(date, phosphorous);
+            }
+
+            // potassium metric
+            String potassium = datapoint.get("potassiumLevel").toString();
+            if (potassiumHash.containsKey(date)) {
+                float storedPot = Float.valueOf(potassiumHash.get(date));
+                float currentPot = Float.valueOf(potassium);
+
+                float averagePot = (float) (storedPot + currentPot) / 2;
+                potassiumHash.replace(date, String.valueOf(averagePot));
+            }
+            else {
+                potassiumHash.put(date, potassium);
+            }
+
+
         }
 
-        // init the new response hashmap
-        HashMap<String,List<HashMap<String,String>>> responseMap = new LinkedHashMap<>();
-        responseMap.put("moisture", moistureArr);
-        responseMap.put("ph", phLevelArr);
-        responseMap.put("nitrogen", nitorgenLevelArr);
-        responseMap.put("phosphorous", phosphorousLevelArr);
-        responseMap.put("potassium", potassiumLevelArr);
+        // build response hash
+        HashMap<String,HashMap<String,String>> responseHash = new LinkedHashMap<>();
+        responseHash.put("moisture", moistureHash);
+        responseHash.put("ph", phHash);
+        responseHash.put("nitrogen", nitrogenHash);
+        responseHash.put("phosphorous", phosphorousHash);
+        responseHash.put("potassium", potassiumHash);
 
-        logger.logInfoMsg("Generated HashMap of individualized metrics");
-        return responseMap;
+        return responseHash;
 
     }
+
 
 }

@@ -3,7 +3,6 @@ package com.cropsense.metrics_server.Controllers;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,8 +46,8 @@ public class SoilMetricsController {
         ResponseEntity<?> response;
 
         try {
-            HashMap<String,List<HashMap<String,String>>> responseHash = smService.getIndividualSoilMetricsForCrop(cropId);
-            response = new ResponseEntity<HashMap<String,List<HashMap<String,String>>>>(responseHash, HttpStatus.OK);
+            HashMap<String,HashMap<String,String>> responseHash = smService.getIndividualSoilMetricsForCrop(cropId);
+            response = new ResponseEntity<HashMap<String,HashMap<String,String>>>(responseHash, HttpStatus.OK);
         }
         catch (Exception e) {
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
