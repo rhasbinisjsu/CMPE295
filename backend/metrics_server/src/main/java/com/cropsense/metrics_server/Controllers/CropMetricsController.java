@@ -2,7 +2,7 @@ package com.cropsense.metrics_server.Controllers;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -80,8 +80,8 @@ public class CropMetricsController {
         ResponseEntity<?> response;
 
         try {
-            List<String> cropSpecies = cmService.getActiveCropSpeciesForOwner(ownerId);
-            response = new ResponseEntity<List<String>>(cropSpecies, HttpStatus.OK);
+            HashMap<String,Integer> cropSpecies = cmService.getActiveCropSpeciesForOwner(ownerId);
+            response = new ResponseEntity<HashMap<String,Integer>>(cropSpecies, HttpStatus.OK);
         }
         catch (Exception e) {
             logger.logErrorMsg("Caught Exception... " + e.getCause() + "\nReason: " + e.getMessage());
