@@ -5,7 +5,9 @@ import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -94,7 +96,8 @@ public class CropMetricsService {
      * @throws IOException
      * @throws InterruptedException
      */
-    public List<String> getActiveCropSpeciesForOwner(long ownerId) throws URISyntaxException, IOException, InterruptedException {
+    //public List<String> getActiveCropSpeciesForOwner(long ownerId) throws URISyntaxException, IOException, InterruptedException {
+    public HashMap<String,Integer> getActiveCropSpeciesForOwner(long ownerId) throws URISyntaxException, IOException, InterruptedException {
 
         logger.logInfoMsg("Finding active crop species for owner with ID: " + Long.toString(ownerId));
 
@@ -119,9 +122,10 @@ public class CropMetricsService {
 
         logger.logInfoMsg("Captured farm IDs: " + farmIds.toString() + " for owner with ID: " + Long.toString(ownerId));
 
-        List<String> cropTypes = new ArrayList<>();
+        HashMap<String,Integer> cropTypes = new HashMap<>();
 
         // Find crops
+        int totalCount = 0;
         for (long captured : farmIds) {
             String cropsUrl = "http://" + connectionHost + ":" + connectionPort + cropEndpoints.getBaseUrl() + cropEndpoints.getActiveCropsForFarm() + "?farmId=" + Long.toString(captured);
             HttpRequest requestActiveCrops = httpTransporter.buildRequest(cropsUrl);
@@ -132,17 +136,36 @@ public class CropMetricsService {
             for (int i = 0; i < cropArr.length(); i++) {
                 JSONObject cropJson = cropArr.getJSONObject(i);
                 String cropTypeStr = cropJson.get("cropSpecies").toString();
+                Integer transplantedCrop = Integer.valueOf(cropJson.get("transplantAmount").toString());
                 logger.logInfoMsg("Found crop species: " + cropTypeStr);
+                totalCount = totalCount + transplantedCrop;
 
-                if (!cropTypes.contains(cropTypeStr)) {
+                if (!cropTypes.containsKey(cropTypeStr)) {
                     logger.logInfoMsg("Found new species... appending");
-                    cropTypes.add(cropTypeStr);
+                    cropTypes.put(cropTypeStr, transplantedCrop);
                 }
                 else {
-                    logger.logInfoMsg("Already account for " + cropTypeStr + " not appending & moving on");
+                    logger.logInfoMsg("Already account for " + cropTypeStr + " adding new count to total");
+                    int storedCount = cropTypes.get(cropTypeStr);
+                    int newCount = storedCount + transplantedCrop;
+                    cropTypes.replace(cropTypeStr, newCount);
                 }
 
             }
+        }
+
+        logger.logInfoMsg("Total plant count: " + Integer.toString(totalCount));
+
+        for (Map.Entry<String,Integer> entry : cropTypes.entrySet()) {
+            String currentKey = entry.getKey();
+            int rawCount = entry.getValue();
+            logger.logInfoMsg("raw count " + Integer.toString(rawCount));
+
+            float percentage = (float) rawCount / totalCount ;
+            percentage = percentage * 100;
+            int percentageInt = Math.round(percentage);
+
+            cropTypes.replace(currentKey, percentageInt);
         }
 
         logger.logInfoMsg("Collected the active crop species: " + cropTypes.toString());
