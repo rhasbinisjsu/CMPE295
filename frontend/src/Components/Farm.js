@@ -22,7 +22,7 @@ function Farm() {
     zip: '',
   });
   const [pins, setPins] = useState([]);
-  const [mapCenter, setMapCenter] = useState([37.003, -121.557]);
+  const [mapCenter, setMapCenter] = useState([37.1951194, -121.7262247]);
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const handleCenterFarm = async () => {
       const { lat, lng } = response.data.results[0].geometry.location;
       setMapCenter([lat, lng]);
       if (mapRef.current) {
-        mapRef.current.setView([lat, lng], 16);
+        mapRef.current.setView([lat, lng], 14);
       }
     } else {
       console.error("Geocoding failed: No results found.");
@@ -245,7 +245,7 @@ const handleCenterFarm = async () => {
             </button>
           </form>
           <div className="mt-6">
-            <MapContainer center={mapCenter} zoom={16} style={{ height: '400px', width: '100%' }} ref={mapRef}>
+            <MapContainer center={mapCenter} zoom={14} style={{ height: '400px', width: '100%' }} ref={mapRef}>
               <TileLayer
                 url="http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
                 subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
