@@ -69,7 +69,7 @@ const CropDetail = () => {
     return { categories, seriesData };
   };
 
-  const diseaseRatePercentage = (diseaseRate * 100).toFixed(2); // Convert to percentage and format to 2 decimal places
+  const diseaseRatePercentage = (diseaseRate).toFixed(2); // Convert to percentage and format to 2 decimal places
   const formattedDiseaseRateForAllDates = formatDataForGraph(diseaseRateForAllDates);
 
   return (
