@@ -25,7 +25,6 @@ function Farm() {
   const [mapCenter, setMapCenter] = useState([37.1951194, -121.7262247]);
   const mapRef = useRef(null);
 
-
   useEffect(() => {
     // Example fetch call to simulate data loading
     setTimeout(() => {
