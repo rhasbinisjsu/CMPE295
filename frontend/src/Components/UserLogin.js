@@ -388,7 +388,7 @@ function UserLogin() {
       sessionStorage.setItem('userId', response.data); // Assuming response.data is the user ID
 
       // Redirect to home page after successful login
-      history.push('/');
+      history.push('/userDashboard');
     } catch (error) {
       console.error('Error logging in:', error);
       setError('Invalid username or password. Please try again.');
