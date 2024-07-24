@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cropsense-application-server-deployment
+  name: cropsense-application-server
   labels:
     app: cropsense-application-server
 spec:
@@ -17,8 +17,21 @@ spec:
       containers:
       - name: cropsense-application-server
         image: cropsense-application-server:0.0.1-SNAPSHOT
-        envFrom:
-          - configMapRef:
-              name: cropsense-application-server-configmap
+        env:
+          - name: CROPSENSE_RDB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: cropsense-application-server-configmap
+                key: CROPSENSE_RDB_URL
+          - name: CROPSENSE_RDB_USER
+            valueFrom:
+              configMapKeyRef:
+                name: cropsense-application-server-configmap
+                key: CROPSENSE_RDB_USER
+          - name: CROPSENSE_RDB_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: cropsense-application-server-configmap
+                key: CROPSENSE_RDB_PASSWORD
         ports:
         - containerPort: 8080
