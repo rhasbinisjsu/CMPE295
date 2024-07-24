@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cropsense-metrics-server-deployment
+  name: cropsense-metrics-server
   labels:
     app: cropsense-metrics-server
 spec:
@@ -17,8 +17,16 @@ spec:
       containers:
       - name: cropsense-metrics-server
         image: cropsense-metrics-server:0.0.1-SNAPSHOT
-        envFrom:
-          - configMapRef:
-              name: cropsense-metrics-server-configmap
+        env:
+          - name: CROPSENSE_APPLICATION_SERVER_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: cropsense-metrics-server-configmap
+                key: CROPSENSE_APPLICATION_SERVER_HOST
+          - name: CROPSENSE_APPLICATION_SERVER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: cropsense-metrics-server-configmap
+                key: CROPSENSE_APPLICATION_SERVER_PORT
         ports:
         - containerPort: 8080
