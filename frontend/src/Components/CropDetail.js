@@ -3,6 +3,7 @@ import LineGraph from './LineGraph';
 import { Tab } from '@headlessui/react';
 import axios from 'axios';
 import { CameraIcon } from '@heroicons/react/24/solid';
+import { parseISO, format } from 'date-fns';
 
 const CropDetail = () => {
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
@@ -63,9 +64,15 @@ const CropDetail = () => {
     { title: 'Potassium Levels', data: soilMetricsData.potassium, color: '#9467bd' }
   ];
 
+  // const formatDataForGraph = (data) => {
+  //   const categories = Object.keys(data);
+  //   const seriesData = categories.map(date => parseFloat(data[date]));
+  //   return { categories, seriesData };
+  // };
+
   const formatDataForGraph = (data) => {
-    const categories = Object.keys(data);
-    const seriesData = categories.map(date => parseFloat(data[date]));
+    const categories = Object.keys(data).map(date => format(parseISO(date), 'MMM dd')); // Format date strings
+    const seriesData = Object.values(data).map(value => parseFloat(value));
     return { categories, seriesData };
   };
 
@@ -142,6 +149,7 @@ const CropDetail = () => {
           </div>
         </div>
       </div>
+      
 
       {/* Disease Rate for All Dates Line Graph */}
       <div className="flex justify-center mt-6">
@@ -150,8 +158,55 @@ const CropDetail = () => {
           <LineGraph title="Disease Rate Over Time" data={formattedDiseaseRateForAllDates.seriesData} categories={formattedDiseaseRateForAllDates.categories} color="#ff6347" />
         </div>
       </div>
+      <div className="flex justify-center mt-6">
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+          <div className="bg-white p-4 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Latest Species Anomalies</h2>
+            <table className="min-w-full bg-white">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border-b text-left">Species</th>
+                  <th className="py-2 px-8 border-b text-left">Latitude</th>
+                  <th className="py-2 px-4 border-b text-left">Longitude</th>
+                </tr>
+              </thead>
+              <tbody>
+               
+              </tbody>
+            </table>
+          </div>
+
+        <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md ">
+        <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
+          <CameraIcon className="h-6 w-6 text-white" />
+        </div>
+        <div className="p-4 text-right">
+          <p className="block antialiased text-xl font-semibold leading-normal font-normal text-blue-gray-600">Anomaly Count</p>
+          <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-900">insert value here</h4>
+        </div>
+        <div className="border-t border-blue-gray-50 p-4">
+          <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+            
+          </p>
+        </div>
+      </div>
+
+      </div>
+      </div>
+
+      <div className="flex justify-center mt-6">
+        <div className="mt-6 bg-white p-4 rounded-lg shadow-md h-fit w-1/2">
+        <h2 className="text-2xl font-semibold mb-4">Anomaly Count</h2>
+        <LineGraph  color='#ec4899' />
+        </div>
+      </div>
     </div>
+
+    
   );
 };
 
 export default CropDetail;
+

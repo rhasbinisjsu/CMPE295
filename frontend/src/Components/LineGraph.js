@@ -1,34 +1,41 @@
-// LineGraph.js
 import React from 'react';
-import Chart from 'react-apexcharts';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
 
-const LineGraph = ({ title, data, color }) => {
-  const chartOptions = {
-    chart: {
-      type: 'line',
-      width: '100%',
-    },
-    stroke: {
-      curve: 'smooth',
-    },
-    series: [
+
+
+const LineGraph = ({ title, data, categories, color }) => {
+  const chartData = {
+    labels: categories,
+    datasets: [
       {
-        name: title,
+        label: title,
         data: data,
-      }
+        borderColor: color,
+        fill: true,
+      },
     ],
-    xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+  };
+
+  const options = {
+    scales: {
+      x: {
+        type: 'category',
+        labels: categories,
+      },
+      y: {
+        beginAtZero: true,
+      },
     },
-    colors: [color], 
   };
 
   return (
-    <div className="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white">
-      <h5 className="text-xl text-gray-700">{title}</h5>
-      <Chart options={chartOptions} series={chartOptions.series} type="line" />
+    <div>
+      <h2>{title}</h2>
+      <Line data={chartData} options={options} />
     </div>
   );
 };
 
 export default LineGraph;
+
