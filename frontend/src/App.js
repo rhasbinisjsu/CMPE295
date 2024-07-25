@@ -11,7 +11,6 @@ import UserLogin from './Components/UserLogin';
 import UserSignup from './Components/UserSignUp';
 import UserDashboard from './Components/UserDashboard';
 import Farm from './Components/Farm';
-import Crop from './Components/Crop';
 import Mission from './Components/Mission';
 import Header from './Components/Header';
 import Crops from './Components/Crops';
@@ -32,7 +31,6 @@ return (
               <Route exact path="/userLogin" component={UserLogin}/>
               <Route exact path="/userSignUp" component={UserSignup}/>
               <Route exact path="/Farm" component={Farm}/>
-              <Route exact path="/Crop" component={Crop}/>
               <Route exact path="/Mission" component={Mission}/>
               <Route exact path="/userDashboard" component={UserDashboard}/>
               <Route exact path="/crops"component={Crops}/>

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import Sidebar from "./Sidebar";
 import Modal from 'react-modal';
-
+import { MapContainer, TileLayer, Marker, Polygon, useMap, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet.gridlayer.googlemutant';
 
 function Crops() {
 
@@ -71,6 +74,7 @@ function Crops() {
       startDate: '',
       endDate: ''
     });
+    setCropPins([]);
   };
 
   const handleChange = (e) => {
@@ -79,6 +83,23 @@ function Crops() {
       ...form,
       [name]: type === 'checkbox' ? checked : value
     });
+  };
+
+  const addCropPin = (e) => {
+    setCropPins([...cropPins, e.latlng]);
+  };
+
+  const MapEvents = () => {
+    const map = useMap();
+    useMapEvents({
+      click: addCropPin,
+    });
+
+    useEffect(() => {
+      mapRef.current = map;
+    }, [map]);
+
+    return null;
   };
 
   const handleSubmit = async (e) => {
@@ -93,7 +114,8 @@ function Crops() {
       activeFlag: form.activeFlag,
       status: form.status,
       startDate: form.startDate,
-      endDate: form.endDate
+      endDate: form.endDate,
+      coordinates: cropPins
     };
 
     try {
@@ -106,6 +128,21 @@ function Crops() {
       window.alert('Failed to create crop');
     }
   };
+
+  // Custom icon using Heroicons MapPinIcon
+  const customIconHtml = `
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+    </svg>
+  `;
+
+  const customIcon = new L.DivIcon({
+    html: customIconHtml,
+    iconSize: [24, 24],
+    iconAnchor: [12, 24],
+    className: "" // Add your own class name if needed
+  });
 
   return (
     <div className="flex h-screen">
@@ -166,7 +203,7 @@ function Crops() {
         className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
         ariaHideApp={false}
       >
-        <div className="bg-white p-6 rounded-lg w-3/4">
+        <div className="bg-white p-6 rounded-lg w-1/2">
           <h2 className="text-3xl mb-4 font-bold">Crop History</h2>
           <table className="min-w-full bg-white">
             <thead>
@@ -211,10 +248,25 @@ function Crops() {
         className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
         ariaHideApp={false}
       >
-        <div className="bg-white p-6 rounded-lg w-3/4">
+        <div className="bg-white p-6 rounded-lg w-1/2">
           <h2 className="text-3xl mb-4 font-bold">Create Crop</h2>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
+            <div className="mt-6">
+              <MapContainer center={mapCenter} zoom={14} style={{ height: '400px', width: '100%' }} ref={mapRef}>
+                <TileLayer
+                  url="http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                  subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+                />
+                <MapEvents />
+                {cropPins.map((pin, index) => (
+                  <Marker key={index} position={pin} icon={customIcon} />
+                ))}
+                {cropPins.length > 2 && (
+                  <Polygon positions={cropPins} color="blue" />
+                )}
+              </MapContainer>
+            </div>
+            <div className="mb-4 mt-5 w-1/2">
               <label className="block text-gray-700">Crop Species</label>
               <input
                 type="text"
@@ -225,7 +277,8 @@ function Crops() {
                 required
               />
             </div>
-            <div className="mb-4">
+            <div className="flex space-x-6 ">
+            <div className="mb-4 w-1/5">
               <label className="block text-gray-700">Transplant Amount</label>
               <input
                 type="number"
@@ -236,7 +289,7 @@ function Crops() {
                 required
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-1/5">
               <label className="block text-gray-700">Cultivated Amount</label>
               <input
                 type="number"
@@ -247,7 +300,7 @@ function Crops() {
                 required
               />
             </div>
-            <div className="mb-4">
+              <div className="mb-4">
               <label className="block text-gray-700">Active</label>
               <input
                 type="checkbox"
@@ -257,7 +310,7 @@ function Crops() {
                 className="mr-2"
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-1/4">
               <label className="block text-gray-700">Status</label>
               <input
                 type="text"
@@ -268,7 +321,10 @@ function Crops() {
                 required
               />
             </div>
-            <div className="mb-4">
+            </div>
+
+            <div className="flex space-x-4">
+              <div className="mb-4 w-1/2">
               <label className="block text-gray-700">Start Date</label>
               <input
                 type="date"
@@ -279,7 +335,7 @@ function Crops() {
                 required
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 w-1/2">
               <label className="block text-gray-700">End Date</label>
               <input
                 type="date"
@@ -290,9 +346,12 @@ function Crops() {
                 required
               />
             </div>
+
+            </div>
+
             <button
               type="submit"
-              className="bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700"
+              className="mt-4 bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700"
             >
               Create Crop
             </button>
