@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: cropsense-metrics-server-configmap
 data:
-  CROPSENSE_APPLICATION_SERVER_HOST: "cropsense-application-server-service.default.svc.cluster.local"
+  CROPSENSE_APPLICATION_SERVER_HOST: "cropsense-application-server-service.cropsense.svc.cluster.local"
   CROPSENSE_APPLICATION_SERVER_PORT: "8000"
