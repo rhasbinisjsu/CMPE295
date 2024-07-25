@@ -265,13 +265,18 @@ import axios from 'axios';
 import { CameraIcon } from '@heroicons/react/24/solid';
 import { parseISO, format } from 'date-fns';
 
-const METRICS_SERVER_IP=process.env.METRICS_SERVER_IP;
-const METRICS_SEVER_PORT=process.env.METRICS_SERVER_PORT;
-const APP_SERVER_IP=process.env.APP_SERVER_IP;
-const APP_SERVER_PORT=process.env.APP_SERVER_PORT;
+
 
 
 const CropDetail = () => {
+  const METRICS_SERVER_IP=process.env.REACT_APP_METRICS_SERVER_IP;
+  const METRICS_SEVER_PORT=process.env.REACT_APP_METRICS_SERVER_PORT;
+  const APP_SERVER_IP=process.env.REACT_APP_APP_SERVER_IP;
+  const APP_SERVER_PORT=process.env.REACT_APP_APP_SERVER_PORT;
+
+  console.log('METRICS_SERVER_IP:', process.env.REACT_APP_METRICS_SERVER_IP);
+  console.log('METRICS_SERVER_PORT:', process.env.REACT_APP_METRICS_SERVER_PORT);
+  
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
   const [soilMetricsData, setSoilMetricsData] = useState(null);
   const [diseaseData, setDiseaseData] = useState(null);

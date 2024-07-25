@@ -1,100 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { useHistory } from 'react-router-dom';
-
-
-// import Sidebar from "./Sidebar";
-// import UserDashboard from "./UserDashboard";
-
-// function Crop() {
-//   const [data, setData] = useState(null);
-
-//   return (
-//     <div className="flex">
-//       <Sidebar />
-//       <div className="flex-1 p-10">
-//           <h1 className="text-3xl font-bold mb-6">Crop</h1>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Crop;
-
-//----------------------------------------------------------------------------------------------------
-
-
-// import React, { useState, useEffect } from "react";
-// import { useHistory } from 'react-router-dom';
-// import axios from 'axios';
-
-// import Sidebar from "./Sidebar";
-
-// function Crop() {
-//   const [crops, setCrops] = useState([]);
-//   const history = useHistory();
-
-//   useEffect(() => {
-//     const farmId = sessionStorage.getItem('farmId');
-//     // axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=${farmId}`)
-//     axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=1`)
-//       .then(response => {
-//         setCrops(response.data);
-//       })
-//       .catch(error => {
-//         console.error('There was an error fetching the crops data!', error);
-//       });
-//   }, []);
-
-//   const handleRowClick = (cropId) => {
-//     history.push(`/crop/${cropId}`);
-//   };
-
-//   return (
-//     <div className="flex">
-//       <Sidebar />
-//       <div className="flex-1 p-10">
-//         <h1 className="text-3xl font-bold mb-6">Crop</h1>
-//         <div className="overflow-x-auto">
-//           <table className="min-w-full bg-white">
-//             <thead>
-//               <tr>
-//                 <th className="py-2 px-4 bg-gray-200">ID</th>
-//                 <th className="py-2 px-4 bg-gray-200">Species</th>
-//                 <th className="py-2 px-4 bg-gray-200">Transplant Amount</th>
-//                 <th className="py-2 px-4 bg-gray-200">Cultivated Amount</th>
-//                 <th className="py-2 px-4 bg-gray-200">Active</th>
-//                 <th className="py-2 px-4 bg-gray-200">Status</th>
-//                 <th className="py-2 px-4 bg-gray-200">Start Date</th>
-//                 <th className="py-2 px-4 bg-gray-200">End Date</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {crops.map((crop) => (
-//                 <tr 
-//                   key={crop.cropId} 
-//                   className="cursor-pointer hover:bg-gray-100" 
-//                   onClick={() => handleRowClick(crop.cropId)}
-//                 >
-//                   <td className="py-2 px-4">{crop.cropId}</td>
-//                   <td className="py-2 px-4">{crop.cropSpecies}</td>
-//                   <td className="py-2 px-4">{crop.transplantAmount}</td>
-//                   <td className="py-2 px-4">{crop.cultivatedAmount}</td>
-//                   <td className="py-2 px-4">{crop.activeFlag ? 'Yes' : 'No'}</td>
-//                   <td className="py-2 px-4">{crop.status}</td>
-//                   <td className="py-2 px-4">{crop.startDate}</td>
-//                   <td className="py-2 px-4">{crop.endDate}</td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Crop;
-
 import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -102,12 +5,17 @@ import Modal from 'react-modal';
 
 import Sidebar from "./Sidebar";
 
-const METRICS_SERVER_IP=process.env.METRICS_SERVER_IP;
-const METRICS_SEVER_PORT=process.env.METRICS_SERVER_PORT;
-const APP_SERVER_IP=process.env.APP_SERVER_IP;
-const APP_SERVER_PORT=process.env.APP_SERVER_PORT;
 
 function Crop() {
+
+  const METRICS_SERVER_IP=process.env.REACT_APP_METRICS_SERVER_IP;
+  const METRICS_SEVER_PORT=process.env.REACT_APP_METRICS_SERVER_PORT;
+  const APP_SERVER_IP=process.env.REACT_APP_APP_SERVER_IP;
+  const APP_SERVER_PORT=process.env.REACT_APP_APP_SERVER_PORT;
+
+  console.log('METRICS_SERVER_IP:', process.env.REACT_APP_METRICS_SERVER_IP);
+  console.log('METRICS_SERVER_PORT:', process.env.REACT_APP_METRICS_SERVER_PORT);
+
   const [crops, setCrops] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({
