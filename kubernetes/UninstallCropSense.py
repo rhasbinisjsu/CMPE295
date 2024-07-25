@@ -2,16 +2,23 @@
 
 ## Imported modules
 import subprocess
+import sys
 
 ## --- Helper functions ---
 
 # Delete a kuberneter resource by name
 def kubectlDeleteResourceCmd(resourceKind, csSvc):
-    deleteCmd = "kubectl delete " + resourceKind + " " + csSvc
+    deleteCmd = "kubectl delete " + resourceKind + " " + csSvc + " -n cropsense"
     print("[ INFO ] Running command: " + deleteCmd)
     output = subprocess.run(deleteCmd, shell=True, capture_output=True)
     return output
 
+# Delete the cropsense namsepace
+def kubectlDeleteNs():
+    deleteNsCmd = "kubectl delete ns cropsense"
+    print("[ INFO ] Deleting the cropsense namespace")
+    output = subprocess.run(deleteNsCmd, shell=True, capture_output=True)
+    return output
 
 ## --- Tear down process ---
 
@@ -61,6 +68,15 @@ for configmap in configmapNames:
         print("[ INFO ] * Successfully deleted resource: " + configmap)
     else:
         print("[ ERROR ] * Failed to delete resource: " + configmap + "\n  Reason: " + output.stderr.decode())
+
+
+## Delete the cropsense ns
+output = kubectlDeleteNs()
+if output.returncode == 0:
+    print("[ INFO ] Successfully deleted the cropsense namespace")
+else:
+    print("[ ERROR ] Failed to delete the cropsense namespace with reason: \n" + output.stderr.decode())
+    sys.exit()
 
 
 print("\n\n-------- EXITED TEAR-DOWN PROCESS --------\n\n")

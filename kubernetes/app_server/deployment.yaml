@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: cropsense-application-server
-        image: cropsense-application-server:0.0.1-SNAPSHOT
+        image: rhasbinisjsu/cropsense-application-server:0.0.1-SNAPSHOT
         env:
           - name: CROPSENSE_RDB_URL
             valueFrom:

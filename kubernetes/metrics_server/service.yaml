@@ -11,4 +11,4 @@ spec:
       protocol: TCP
       port: 8001
       targetPort: 8081
-      nodePort: 30001
+      nodePort: 30002

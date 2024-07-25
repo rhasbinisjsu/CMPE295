@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: cropsense-metrics-server
-        image: cropsense-metrics-server:0.0.1-SNAPSHOT
+        image: rhasbinisjsu/cropsense-metrics-server:0.0.1-SNAPSHOT
         env:
           - name: CROPSENSE_APPLICATION_SERVER_HOST
             valueFrom:
@@ -29,4 +29,4 @@ spec:
                 name: cropsense-metrics-server-configmap
                 key: CROPSENSE_APPLICATION_SERVER_PORT
         ports:
-        - containerPort: 8080
+        - containerPort: 8081

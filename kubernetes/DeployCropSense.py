@@ -1,3 +1,4 @@
+#!/bin/python3
 ## CropSense ecosystem kubernetes deployment automation script
 
 ## Imported modules
@@ -9,14 +10,29 @@ import time
 
 # Apply a yaml file containing k8s API payload
 def kubectlApplyCmd(filePath, yamlFile):
-    applyCmd = "kubectl apply -f " + filePath + "/" + yamlFile
+    applyCmd = "kubectl apply -f " + filePath + "/" + yamlFile + " -n cropsense"
     print("[ INFO ] Running command: " + applyCmd)
     output = subprocess.run(applyCmd, shell=True, capture_output=True)
+    return output
+
+# Create the cropsense namespace
+def kubectlCreateNs():
+    createNsCmd = "kubectl create ns cropsense"
+    print("[ INFO ] Creating the cropsense namespace")
+    output =  subprocess.run(createNsCmd, shell=True, capture_output=True)
     return output
 
 ## --- Deployment process ---
 
 print("\n\n-------- ENTERING DEPLOYMENT PROCESS --------\n\n")
+
+## Creating the cropsense namespace
+output = kubectlCreateNs()
+if output.returncode == 0:
+    print("[ INFO ] Successfully created the cropsense namespace")
+else:
+    print("[ ERROR ] Failed to create the cropsense namespace with reason: \n" + output.stderr.decode())
+    sys.exit()
 
 ## Common file names
 k8sResources = { 
@@ -27,7 +43,7 @@ k8sResources = {
 
 # file path for app-server
 appServerFilePath = "./app_server"
-print("[ INFO ] File path for application-server kubernetes resources: " + appServerFilePath)
+print("\n[ INFO ] File path for application-server kubernetes resources: " + appServerFilePath)
 # file path for metrics-server
 metricsServerFilePath = "./metrics_server"
 print("[ INFO ] File path for metrics-server kubernetes resources: " + metricsServerFilePath)
