@@ -11,6 +11,11 @@ import 'leaflet.gridlayer.googlemutant';
 
 import UserDashboard from "./UserDashboard";
 
+const METRICS_SERVER_IP=process.env.METRICS_SERVER_IP;
+const METRICS_SEVER_PORT=process.env.METRICS_SERVER_PORT;
+const APP_SERVER_IP=process.env.APP_SERVER_IP;
+const APP_SERVER_PORT=process.env.APP_SERVER_PORT;
+
 function Farm() {
   const history = useHistory();
   const [data, setData] = useState([]);
@@ -70,7 +75,7 @@ const handleCenterFarm = async () => {
 
   try {
     const response = await axios.get(geocodeUrl);
-    console.log("Geocode API Response:", response.data); // Log the full response for debugging
+    console.log("Geocode API Response:", response.data);
 
     if (response.data.status === "OK" && response.data.results.length > 0) {
       const { lat, lng } = response.data.results[0].geometry.location;
@@ -110,7 +115,7 @@ const handleCenterFarm = async () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newFarm = {
-      id: data.length + 1, // This is just a placeholder.
+      id: data.length + 1,
       name: form.name,
       location: `${form.street}, ${form.city}, ${form.zip}`,
     };
@@ -118,7 +123,6 @@ const handleCenterFarm = async () => {
     closeModal();
   };
 
-  // Custom icon using Heroicons MapPinIcon
   const customIconHtml = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
       <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />

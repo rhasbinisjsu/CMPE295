@@ -102,6 +102,11 @@ import Modal from 'react-modal';
 
 import Sidebar from "./Sidebar";
 
+const METRICS_SERVER_IP=process.env.METRICS_SERVER_IP;
+const METRICS_SEVER_PORT=process.env.METRICS_SERVER_PORT;
+const APP_SERVER_IP=process.env.APP_SERVER_IP;
+const APP_SERVER_PORT=process.env.APP_SERVER_PORT;
+
 function Crop() {
   const [crops, setCrops] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -119,7 +124,7 @@ function Crop() {
 
   useEffect(() => {
     const farmId = sessionStorage.getItem('farmId');
-    axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=${farmId}`)
+    axios.get(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=${farmId}`)
     // axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=1`)
       .then(response => {
         setCrops(response.data);
@@ -161,7 +166,7 @@ function Crop() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8080/CropSense/AppServer/CropController/createCrop', form)
+    axios.post(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/CropController/createCrop`, form)
       .then(response => {
         setCrops([...crops, response.data]);
         closeModal();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
-Modal.setAppElement('#root'); // Make sure to set the app element for accessibility
+Modal.setAppElement('#root');
 
 const ProfileModal = ({ isOpen, onRequestClose, user, onSave }) => {
   const [formData, setFormData] = useState({

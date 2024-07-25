@@ -80,15 +80,6 @@ function Mission() {
       status: 'Pending',
     };
 
-    // Example of API call:
-    // await fetch('/api/missions', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(newMission),
-    // });
-
     setData([...data, newMission]);
     closeModal();
   };

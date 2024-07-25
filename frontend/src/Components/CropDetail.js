@@ -11,12 +11,15 @@
 //   const [diseaseData, setDiseaseData] = useState(null);
 //   const [diseaseRate, setDiseaseRate] = useState(null);
 //   const [diseaseRateForAllDates, setDiseaseRateForAllDates] = useState(null);
+//   const [speciesAnomalies, setSpeciesAnomalies] = useState(null);
+//   const [speciesAnomalyCount, setSpeciesAnomalyCount] = useState(0);
+//   const [speciesAnomalyCountOverTime, setSpeciesAnomalyCountOverTime] = useState(null);
 
 //   useEffect(() => {
-//     const cropId = sessionStorage.getItem('cropId') || 9; // Use cropId from session storage or default to 9
+//     const cropId = sessionStorage.getItem('cropId') || 9;
 
 //     // Fetch soil metrics data
-//     axios.get(`http://localhost:8081/CropSense/MetricsServer/SoilMetricsController/getIndividualizedMetricsForCrop?cropId=${cropId}`)
+//     axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/SoilMetricsController/getIndividualizedMetricsForCrop?cropId=${cropId}`)
 //       .then(response => {
 //         setSoilMetricsData(response.data);
 //       })
@@ -25,7 +28,7 @@
 //       });
 
 //     // Fetch disease data
-//     axios.get(`http://localhost:8081/CropSense/MetricsServer/DiseaseMetricsController/getLatestDetectedDiseases?cropId=${cropId}`)
+//     axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/DiseaseMetricsController/getLatestDetectedDiseases?cropId=${cropId}`)
 //       .then(response => {
 //         setDiseaseData(response.data);
 //       })
@@ -34,7 +37,7 @@
 //       });
 
 //     // Fetch disease rate data
-//     axios.get(`http://localhost:8081/CropSense/MetricsServer/DiseaseMetricsController/calculateLatestDiseaseRate?cropId=${cropId}`)
+//     axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/DiseaseMetricsController/calculateLatestDiseaseRate?cropId=${cropId}`)
 //       .then(response => {
 //         setDiseaseRate(response.data);
 //       })
@@ -43,16 +46,44 @@
 //       });
 
 //     // Fetch disease rate for all dates data
-//     axios.get(`http://localhost:8081/CropSense/MetricsServer/DiseaseMetricsController/calculateDiseaseRateForAllDates?cropId=${cropId}`)
+//     axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/DiseaseMetricsController/calculateDiseaseRateForAllDates?cropId=${cropId}`)
 //       .then(response => {
 //         setDiseaseRateForAllDates(response.data);
 //       })
 //       .catch(error => {
 //         console.error('There was an error fetching the disease rate for all dates data!', error);
 //       });
+
+//     // Fetch species anomalies data
+//     axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/SpeciesMetricsController/compileLatestSpeciesAnomaliesForCrop?cropId=${cropId}`)
+//       .then(response => {
+//         setSpeciesAnomalies(response.data);
+//       })
+//       .catch(error => {
+//         console.error('There was an error fetching the species anomalies data!', error);
+//       });
+
+//     // Fetch species anomaly count data
+//     axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/SpeciesMetricsController/countLatestSpeciesAnomaliesForCrop?cropId=${cropId}`)
+//       .then(response => {
+//         setSpeciesAnomalyCount(response.data);
+//       })
+//       .catch(error => {
+//         console.error('There was an error fetching the species anomaly count data!', error);
+//       });
+
+//     // Fetch species anomaly count over time data
+//     axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/SpeciesMetricsController/calculateSpeciesAnomalyCountForCropOverTime?cropId=${cropId}`)
+//       .then(response => {
+//         setSpeciesAnomalyCountOverTime(response.data);
+//       })
+//       .catch(error => {
+//         console.error('There was an error fetching the species anomaly count over time data!', error);
+//       });
+
 //   }, []);
 
-//   if (!soilMetricsData || !diseaseData || diseaseRate === null || !diseaseRateForAllDates) {
+//   if (!soilMetricsData || !diseaseData || diseaseRate === null || !diseaseRateForAllDates || !speciesAnomalies || speciesAnomalyCountOverTime === null) {
 //     return <div>Loading...</div>;
 //   }
 
@@ -64,20 +95,26 @@
 //     { title: 'Potassium Levels', data: soilMetricsData.potassium, color: '#9467bd' }
 //   ];
 
-//   // const formatDataForGraph = (data) => {
-//   //   const categories = Object.keys(data);
-//   //   const seriesData = categories.map(date => parseFloat(data[date]));
-//   //   return { categories, seriesData };
-//   // };
-
 //   const formatDataForGraph = (data) => {
-//     const categories = Object.keys(data).map(date => format(parseISO(date), 'MMM dd')); // Format date strings
+//     const categories = Object.keys(data).map(date => format(parseISO(date), 'MMM dd'));
 //     const seriesData = Object.values(data).map(value => parseFloat(value));
 //     return { categories, seriesData };
 //   };
 
-//   const diseaseRatePercentage = (diseaseRate).toFixed(2); // Convert to percentage and format to 2 decimal places
+//   const diseaseRatePercentage = (diseaseRate).toFixed(2);
 //   const formattedDiseaseRateForAllDates = formatDataForGraph(diseaseRateForAllDates);
+//   const formattedSpeciesAnomalyCountOverTime = formatDataForGraph(speciesAnomalyCountOverTime);
+
+//   const anomalyList = [];
+//   Object.keys(speciesAnomalies).forEach((species) => {
+//     speciesAnomalies[species].forEach((anomaly) => {
+//       anomalyList.push({
+//         species,
+//         lat: anomaly.lat,
+//         lng: anomaly.lng,
+//       });
+//     });
+//   });
 
 //   return (
 //     <div className="container mx-auto p-6 bg-gray-100">
@@ -144,71 +181,82 @@
 //             <CameraIcon className="h-6 w-6 text-white" />
 //           </div>
 //           <div className="p-4 text-right">
-//             <p className="block antialiased font-sans text-m leading-normal font-normal text-blue-gray-600">Diseased Crop Percentage</p>
-//             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{diseaseRatePercentage}%</h4>
+//             <p className="block antialiased font-sans text-m leading-normal font-normal text-blue-gray-600">Diseased Area</p>
+//             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-900">{diseaseRatePercentage}%</h4>
+//           </div>
+//           <div className="border-t border-blue-gray-50 p-4">
+//             <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+//               Percentage of cultivated area affected by diseases.
+//             </p>
 //           </div>
 //         </div>
 //       </div>
-      
 
-//       {/* Disease Rate for All Dates Line Graph */}
-//       <div className="flex justify-center mt-6">
-//         <div className="mt-6 bg-white p-4 rounded-lg shadow h-fit w-1/2">
-//           <h2 className="text-2xl font-semibold mb-4">Disease Rate Over Time</h2>
-//           <LineGraph title="Disease Rate Over Time" data={formattedDiseaseRateForAllDates.seriesData} categories={formattedDiseaseRateForAllDates.categories} color="#ff6347" />
-//         </div>
-//       </div>
-//       <div className="flex justify-center mt-6">
-//         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-
-
-//           <div className="bg-white p-4 rounded-lg shadow-md">
-//             <h2 className="text-xl font-semibold mb-4">Latest Species Anomalies</h2>
-//             <table className="min-w-full bg-white">
-//               <thead>
-//                 <tr>
-//                   <th className="py-2 px-4 border-b text-left">Species</th>
-//                   <th className="py-2 px-8 border-b text-left">Latitude</th>
-//                   <th className="py-2 px-4 border-b text-left">Longitude</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-               
-//               </tbody>
-//             </table>
-//           </div>
-
-//         <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md ">
-//         <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
-//           <CameraIcon className="h-6 w-6 text-white" />
-//         </div>
-//         <div className="p-4 text-right">
-//           <p className="block antialiased text-xl font-semibold leading-normal font-normal text-blue-gray-600">Anomaly Count</p>
-//           <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-900">insert value here</h4>
-//         </div>
-//         <div className="border-t border-blue-gray-50 p-4">
-//           <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
-            
-//           </p>
-//         </div>
-//       </div>
-
-//       </div>
-//       </div>
-
+//       {/* Disease Rate Line Graph */}
 //       <div className="flex justify-center mt-6">
 //         <div className="mt-6 bg-white p-4 rounded-lg shadow-md h-fit w-1/2">
-//         <h2 className="text-2xl font-semibold mb-4">Anomaly Count</h2>
-//         <LineGraph  color='#ec4899' />
+//           <h2 className="text-2xl font-semibold mb-4">Disease Rate</h2>
+//           <LineGraph title="Disease Rate" data={formattedDiseaseRateForAllDates.seriesData} categories={formattedDiseaseRateForAllDates.categories} color='#1c4d80' />
+//         </div>
+//       </div>
+
+//       {/* Species Anomalies */}
+//       <div className="flex justify-center mt-6 space-x-6">
+//         <div className="bg-white p-4 rounded-lg shadow w-1/2">
+//           <h2 className="text-2xl font-semibold mb-4">Latest Species Anomalies</h2>
+//           <table className="min-w-full bg-white">
+//             <thead>
+//               <tr>
+//                 <th className="py-2 px-4 border-b text-left">Species</th>
+//                 <th className="py-2 px-4 border-b text-left">Latitude</th>
+//                 <th className="py-2 px-4 border-b text-left">Longitude</th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {anomalyList.map((anomaly, index) => (
+//                 <tr key={index}>
+//                   <td className="py-2 px-4 border-b">{anomaly.species}</td>
+//                   <td className="py-2 px-4 border-b">{anomaly.lat}</td>
+//                   <td className="py-2 px-4 border-b">{anomaly.lng}</td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+//       </div>
+
+//       {/* Anomaly Count */}
+//       <div className="flex justify-center mt-6">
+//         <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md w-1/4">
+//           <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
+//             <CameraIcon className="h-6 w-6 text-white" />
+//           </div>
+//           <div className="p-4 text-right">
+//             <p className="block antialiased text-xl font-semibold leading-normal font-normal text-blue-gray-600">Anomaly Count</p>
+//             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-900">{speciesAnomalyCount}</h4>
+//           </div>
+//           <div className="border-t border-blue-gray-50 p-4">
+//             <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
+//               {speciesAnomalyCount} anomalies detected in the latest data.
+//             </p>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Anomaly Count Line Graph */}
+//       <div className="flex justify-center mt-6">
+//         <div className="mt-6 bg-white p-4 rounded-lg shadow-md h-fit w-1/2">
+//           <h2 className="text-2xl font-semibold mb-4">Anomaly Count Over Time</h2>
+//           <LineGraph title="Anomaly Count Over Time" data={formattedSpeciesAnomalyCountOverTime.seriesData} categories={formattedSpeciesAnomalyCountOverTime.categories} color='#ec4899' />
 //         </div>
 //       </div>
 //     </div>
-
-    
 //   );
 // };
 
 // export default CropDetail;
+
+
 
 import React, { useState, useEffect } from 'react';
 import LineGraph from './LineGraph';
@@ -216,6 +264,12 @@ import { Tab } from '@headlessui/react';
 import axios from 'axios';
 import { CameraIcon } from '@heroicons/react/24/solid';
 import { parseISO, format } from 'date-fns';
+
+const METRICS_SERVER_IP=process.env.METRICS_SERVER_IP;
+const METRICS_SEVER_PORT=process.env.METRICS_SERVER_PORT;
+const APP_SERVER_IP=process.env.APP_SERVER_IP;
+const APP_SERVER_PORT=process.env.APP_SERVER_PORT;
+
 
 const CropDetail = () => {
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
@@ -231,7 +285,7 @@ const CropDetail = () => {
     const cropId = sessionStorage.getItem('cropId') || 9;
 
     // Fetch soil metrics data
-    axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/SoilMetricsController/getIndividualizedMetricsForCrop?cropId=${cropId}`)
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SoilMetricsController/getIndividualizedMetricsForCrop?cropId=${cropId}`)
       .then(response => {
         setSoilMetricsData(response.data);
       })
@@ -240,7 +294,7 @@ const CropDetail = () => {
       });
 
     // Fetch disease data
-    axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/DiseaseMetricsController/getLatestDetectedDiseases?cropId=${cropId}`)
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/DiseaseMetricsController/getLatestDetectedDiseases?cropId=${cropId}`)
       .then(response => {
         setDiseaseData(response.data);
       })
@@ -249,7 +303,7 @@ const CropDetail = () => {
       });
 
     // Fetch disease rate data
-    axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/DiseaseMetricsController/calculateLatestDiseaseRate?cropId=${cropId}`)
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/DiseaseMetricsController/calculateLatestDiseaseRate?cropId=${cropId}`)
       .then(response => {
         setDiseaseRate(response.data);
       })
@@ -258,7 +312,7 @@ const CropDetail = () => {
       });
 
     // Fetch disease rate for all dates data
-    axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/DiseaseMetricsController/calculateDiseaseRateForAllDates?cropId=${cropId}`)
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/DiseaseMetricsController/calculateDiseaseRateForAllDates?cropId=${cropId}`)
       .then(response => {
         setDiseaseRateForAllDates(response.data);
       })
@@ -267,7 +321,7 @@ const CropDetail = () => {
       });
 
     // Fetch species anomalies data
-    axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/SpeciesMetricsController/compileLatestSpeciesAnomaliesForCrop?cropId=${cropId}`)
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SpeciesMetricsController/compileLatestSpeciesAnomaliesForCrop?cropId=${cropId}`)
       .then(response => {
         setSpeciesAnomalies(response.data);
       })
@@ -276,7 +330,7 @@ const CropDetail = () => {
       });
 
     // Fetch species anomaly count data
-    axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/SpeciesMetricsController/countLatestSpeciesAnomaliesForCrop?cropId=${cropId}`)
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SpeciesMetricsController/countLatestSpeciesAnomaliesForCrop?cropId=${cropId}`)
       .then(response => {
         setSpeciesAnomalyCount(response.data);
       })
@@ -285,7 +339,7 @@ const CropDetail = () => {
       });
 
     // Fetch species anomaly count over time data
-    axios.get(`http://44.204.8.116:8001/CropSense/MetricsServer/SpeciesMetricsController/calculateSpeciesAnomalyCountForCropOverTime?cropId=${cropId}`)
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SpeciesMetricsController/calculateSpeciesAnomalyCountForCropOverTime?cropId=${cropId}`)
       .then(response => {
         setSpeciesAnomalyCountOverTime(response.data);
       })

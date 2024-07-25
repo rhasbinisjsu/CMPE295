@@ -1,16 +1,16 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HomeIcon, MapIcon, SquaresPlusIcon, CursorArrowRippleIcon } from '@heroicons/react/24/outline';
-import './Sidebar.css'; // Import the CSS file
+import './Sidebar.css'; 
 
 const Sidebar = () => {
   const location = useLocation();
 
-  // Function to check if the link is active
+
   const isActive = (path) => location.pathname === path;
 
   const handleLogout = () => {
-    // Implement your logout functionality here
+  
     alert('Logged out');
   };
 

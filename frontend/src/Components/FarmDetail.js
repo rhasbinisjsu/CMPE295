@@ -7,7 +7,6 @@ const FarmDetail = () => {
   const [farm, setFarm] = useState(null);
 
   useEffect(() => {
-    // Mock data for initial design
     const mockData = [
       { title: 'Soil Metric 1', data: [10, 20, 30, 40, 50] },
       { title: 'Soil Metric 2', data: [15, 25, 35, 45, 55] },

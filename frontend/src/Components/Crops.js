@@ -3,6 +3,11 @@ import axios from 'axios';
 import Sidebar from "./Sidebar";
 import Modal from 'react-modal';
 
+const METRICS_SERVER_IP=process.env.METRICS_SERVER_IP;
+const METRICS_SEVER_PORT=process.env.METRICS_SERVER_PORT;
+const APP_SERVER_IP=process.env.APP_SERVER_IP;
+const APP_SERVER_PORT=process.env.APP_SERVER_PORT;
+
 function Crops() {
   const [crops, setCrops] = useState([]);
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
@@ -20,7 +25,7 @@ function Crops() {
 
   useEffect(() => {
     const farmId = sessionStorage.getItem('farmId');
-    axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchActiveCropsForFarm?farmId=${farmId}`)
+    axios.get(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/CropController/fetchActiveCropsForFarm?farmId=${farmId}`)
       .then(response => {
         setCrops(response.data);
       })
@@ -31,7 +36,7 @@ function Crops() {
 
   const openHistoryModal = () => {
     const farmId = sessionStorage.getItem('farmId');
-    axios.get(`http://localhost:8080/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=${farmId}`)
+    axios.get(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/CropController/fetchAllCropsForFarm?farmId=${farmId}`)
       .then(response => {
         setHistoryData(response.data);
         setIsHistoryModalOpen(true);
@@ -87,7 +92,7 @@ function Crops() {
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/CropSense/AppServer/CropController/createCrop', newCrop);
+      const response = await axios.post(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/CropController/createCrop`, newCrop);
       setCrops([...crops, response.data]);
       window.location.reload();
       closeCreateModal();
