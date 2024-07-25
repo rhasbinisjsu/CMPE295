@@ -138,4 +138,44 @@ public class SpeciesMetricsController {
 
     }
 
+
+    /**
+     * Get the latest entry date
+     * @param cropId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(
+        path = "/getLatestEntryDate",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getLatestEntryDate(
+        @RequestParam long cropId
+    ) throws Exception {
+
+        String cropIdStr = Long.toString(cropId);
+        logger.logInfoMsg("[ ENTER ] Received request to find the latest anomaly detected entry date for crop with ID: " + cropIdStr);
+        ResponseEntity<?> response;
+
+        try {
+            String latestDate = speciesMetricSvc.getLatestEntryDate(cropId);
+
+            if (latestDate == null) {
+                response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            else {
+                response = new ResponseEntity<String>(latestDate, HttpStatus.OK);
+            }
+
+        }
+        catch (Exception e) {
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.logErrorMsg("Caught exception... \n Reason: " + e.getMessage());
+            throw e;
+        }
+
+        logger.logInfoMsg("[ EXIT ] Exiting request to find the latest anomaly detected entry date for crop with ID: " + cropIdStr);
+        return response;
+    }
+
 }

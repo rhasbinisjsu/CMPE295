@@ -59,5 +59,84 @@ public class SoilMetricsController {
         return response;
 
     }
+
+
+    /**
+     * Gather the latest soil metric values - average values
+     * @param cropId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(
+        path = "/getLatestIndividualSoilMetrics",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getLatestIndividualSoilMetrics(
+        @RequestParam long cropId
+    ) throws Exception {
+
+        String cropIdStr = Long.toString(cropId);
+        logger.logInfoMsg("[ ENTER ] Received request to find the latest soil metrics for crop with ID: " + cropIdStr);
+        ResponseEntity<?> response;
+
+        try {
+            HashMap<String,Float> responseHash = smService.getLatestIndividualSoilMetrics(cropId);
+            if (responseHash == null) {
+                response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            else {
+                response = new ResponseEntity<HashMap<String,Float>>(responseHash, HttpStatus.OK);
+            }
+        }
+        catch (Exception e) {
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.logErrorMsg("Caught exception... Failed to fetch and generate individualized metrics \n Reason: " + e.getMessage());
+            throw e;
+        }
+
+        logger.logInfoMsg("[ EXIT ] Exiting request to find the latest soil metrics for crop with ID: " + cropIdStr);
+        return response;
+
+    }
+
+
+    /**
+     * Get the latest date metrics were collected
+     * @param cropId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(
+        path = "/getLatestMetricsDate",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getLatestMetricsDate(
+        @RequestParam long cropId
+    ) throws Exception {
+
+        String cropIdStr = Long.toString(cropId);
+        logger.logInfoMsg("[ ENTER ] Received request to find the latest soil metric collection date for crop with ID: " + cropIdStr);
+        ResponseEntity<?> response;
+
+        try {
+            String latestDate = smService.getLatestMetricsDate(cropId);
+
+            if (latestDate == null) {
+                response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            else {
+                response = new ResponseEntity<String>(latestDate, HttpStatus.OK);
+            }
+
+        }
+        catch (Exception e) {
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.logErrorMsg("Caught exception... \n Reason: " + e.getMessage());
+            throw e;
+        }
+
+        logger.logInfoMsg("[ EXIT ] Exiting request to find the latest soil metric collection date for crop with ID: " + cropIdStr);
+        return response;
+    }
     
 }

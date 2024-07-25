@@ -199,6 +199,47 @@ public class SpeciesMetricsService {
     }
 
 
+    /**
+     * Get the latest data entry date
+     * @param cropId
+     * @return
+     * @throws URISyntaxException 
+     * @throws InterruptedException 
+     * @throws IOException 
+     */
+    public String getLatestEntryDate(long cropId) throws URISyntaxException, IOException, InterruptedException {
+
+        String cropIdStr = Long.toString(cropId);
+        logger.logInfoMsg("Finding the date for latest anomaly species detection entries");
+
+        // get connection details and build url
+        String connectionHost = appServer.getServerIp();
+        String connectionPort = appServer.getServerPort();
+        String getSpeciesEntriesUrl = "http://" + connectionHost + ":" + connectionPort + speciesMetricEndpoint.getEntriesForCropUrl() + "?cropId=" + cropIdStr;
+
+        // build request and get response
+        HttpRequest request = httpTransporter.buildRequest(getSpeciesEntriesUrl);
+        HttpResponse<String> cropSpeciesAnomaliesRes = httpTransporter.sendRequest(request);
+        JSONArray anomaliesArrayJson = new JSONArray(cropSpeciesAnomaliesRes.body());
+
+        // if array is empty
+        if (anomaliesArrayJson.length() == 0) {
+            return null;
+        }
+
+        List<Date> foundDates = this.getEntryDates(anomaliesArrayJson);
+        logger.logInfoMsg("Found dates: " + foundDates.toString());
+
+        Date maxDate = Collections.max(foundDates);
+        String maxDateStr = maxDate.toString();
+
+        logger.logInfoMsg("Found the latest date to be: " + maxDateStr);
+
+        return maxDateStr;
+
+    }
+
+
 
     // Helper methods -------------------------------------------------------------------------------------------------
 
