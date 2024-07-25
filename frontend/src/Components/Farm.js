@@ -15,7 +15,9 @@ function Farm() {
   const history = useHistory();
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [form, setForm] = useState({
+    id: '',
     name: '',
     street: '',
     city: '',
@@ -41,6 +43,18 @@ function Farm() {
     history.push(`/farmDetail/${id}`);
   };
 
+  const handleUpdate = (farm) => {
+    setForm({
+      id: farm.id,
+      name: farm.name,
+      street: farm.location.split(',')[0],
+      city: farm.location.split(',')[1],
+      zip: farm.location.split(',')[2],
+    });
+    setPins([]);
+    setIsUpdateModalOpen(true);
+  };
+
   const handleDelete = (id) => {
     alert(`Delete Farm with ID: ${id}`);
   };
@@ -51,7 +65,13 @@ function Farm() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setForm({ name: '', street: '', city: '', zip: '' });
+    setForm({ id: '', name: '', street: '', city: '', zip: '' });
+    setPins([]);
+  };
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false);
+    setForm({ id: '', name: '', street: '', city: '', zip: '' });
     setPins([]);
   };
 
@@ -62,29 +82,27 @@ function Farm() {
     });
   };
 
-const handleCenterFarm = async () => {
-  const address = `${form.street}, ${form.city}, ${form.zip}`;
-  const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyCa7zU1MY1HQc_vmy1m3Wq4v13LGZXSvt0`;
+  const handleCenterFarm = async () => {
+    const address = `${form.street}, ${form.city}, ${form.zip}`;
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyCa7zU1MY1HQc_vmy1m3Wq4v13LGZXSvt0`;
 
-  try {
-    const response = await axios.get(geocodeUrl);
-    console.log("Geocode API Response:", response.data); // Log the full response for debugging
+    try {
+      const response = await axios.get(geocodeUrl);
+      console.log("Geocode API Response:", response.data); // Log the full response for debugging
 
-    if (response.data.status === "OK" && response.data.results.length > 0) {
-      const { lat, lng } = response.data.results[0].geometry.location;
-      setMapCenter([lat, lng]);
-      if (mapRef.current) {
-        mapRef.current.setView([lat, lng], 14);
+      if (response.data.status === "OK" && response.data.results.length > 0) {
+        const { lat, lng } = response.data.results[0].geometry.location;
+        setMapCenter([lat, lng]);
+        if (mapRef.current) {
+          mapRef.current.setView([lat, lng], 14);
+        }
+      } else {
+        console.error("Geocoding failed: No results found.");
       }
-    } else {
-      console.error("Geocoding failed: No results found.");
+    } catch (error) {
+      console.error("Error geocoding the address:", error);
     }
-  } catch (error) {
-    console.error("Error geocoding the address:", error);
-  }
-};
-
-
+  };
 
   const addPin = (e) => {
     if (pins.length < 4) {
@@ -116,6 +134,17 @@ const handleCenterFarm = async () => {
     closeModal();
   };
 
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    const updatedFarm = {
+      id: form.id,
+      name: form.name,
+      location: `${form.street}, ${form.city}, ${form.zip}`,
+    };
+    setData(data.map(farm => (farm.id === updatedFarm.id ? updatedFarm : farm)));
+    closeUpdateModal();
+  };
+
   // Custom icon using Heroicons MapPinIcon
   const customIconHtml = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
@@ -133,7 +162,7 @@ const handleCenterFarm = async () => {
 
   return (
     <div className="flex h-screen">
-
+      <Sidebar />
       <div className="flex-1 flex justify-center items-start pt-40">
         <div className="w-3/4">
           <div className="relative">
@@ -161,17 +190,24 @@ const handleCenterFarm = async () => {
                 {data.map((farm) => (
                   <tr key={farm.id}>
                     <td className="py-4 px-4 border-b text-center">{farm.id}</td>
-                    <td className="py-4 px-4 border-b text-center">{farm.name}</td>
+                    <td className="py-4 px-4 border-b text-center">
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        onClick={() => handleView(farm.id)}
+                      >
+                        {farm.name}
+                      </button>
+                    </td>
                     <td className="py-4 px-4 border-b text-center">{farm.location}</td>
                     <td className="py-4 px-4 border-b text-center">
                       <button
-                        className="bg-indigo-500 text-white py-1 px-3 rounded mr-8 hover:bg-indigo-700"
-                        onClick={() => handleView(farm.id)}
+                        className="bg-yellow-500 text-white py-1 px-3 rounded mr-8 hover:bg-yellow-700"
+                        onClick={() => handleUpdate(farm)}
                       >
-                        View
+                        Update
                       </button>
                       <button
-                        className="bg-indigo-500 text-white py-1 px-3 rounded hover:bg-indigo-700"
+                        className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700"
                         onClick={() => handleDelete(farm.id)}
                       >
                         Delete
@@ -191,9 +227,9 @@ const handleCenterFarm = async () => {
         className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
         ariaHideApp={false}
       >
-        <div className="bg-white p-6 rounded-lg w-1/2">
+        <div className="bg-white p-6 rounded-lg w-1/2 max-h-full overflow-auto">
           <h2 className="text-3xl mb-4 font-bold">Create Farm</h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-2 w-1/2">
               <label className="block text-gray-700 text-sm font-bold mb-2">Farm Name</label>
               <input
@@ -243,36 +279,127 @@ const handleCenterFarm = async () => {
             >
               Center Farm
             </button>
-          </form>
-          <div className="mt-6">
-            <MapContainer center={mapCenter} zoom={14} style={{ height: '400px', width: '100%' }} ref={mapRef}>
-              <TileLayer
-                url="http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
-                subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
-              />
-              <MapEvents />
-              {pins.map((pin, index) => (
-                <Marker key={index} position={pin} icon={customIcon} />
-              ))}
-              {pins.length === 4 && (
-                <Polygon positions={pins} color="blue" />
-              )}
-            </MapContainer>
-          </div>
-          <div className="mt-4 text-right">
+            <div className="mt-6">
+              <MapContainer center={mapCenter} zoom={14} style={{ height: '400px', width: '100%' }} ref={mapRef}>
+                <TileLayer
+                  url="http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                  subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+                />
+                <MapEvents />
+                {pins.map((pin, index) => (
+                  <Marker key={index} position={pin} icon={customIcon} />
+                ))}
+                {pins.length === 4 && (
+                  <Polygon positions={pins} color="blue" />
+                )}
+              </MapContainer>
+            </div>
             <button
-              onClick={handleSubmit}
-              className="bg-indigo-400 text-white py-2 px-4 rounded shadow hover:bg-green-700"
+              type="submit"
+              className="mt-4 bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700"
             >
               Create
             </button>
             <button
+              type="button"
               onClick={closeModal}
-              className="bg-gray-400 text-white py-2 px-4 rounded shadow hover:bg-gray-700 ml-2"
+              className="ml-4 bg-red-500 text-white py-2 px-4 rounded shadow hover:bg-red-700"
             >
-              Close
+              Cancel
             </button>
-          </div>
+          </form>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={isUpdateModalOpen}
+        onRequestClose={closeUpdateModal}
+        contentLabel="Update Farm"
+        className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
+        ariaHideApp={false}
+      >
+        <div className="bg-white p-6 rounded-lg w-1/2 max-h-full overflow-auto">
+          <h2 className="text-3xl mb-4 font-bold">Update Farm</h2>
+          <form onSubmit={handleUpdateSubmit}>
+
+            <div className="mb-2 w-1/2">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Farm Name</label>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Street</label>
+              <input
+                type="text"
+                name="street"
+                value={form.street}
+                onChange={handleChange}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="flex space-x-4">
+              <div className="mb-2 w-3/5 mr-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={form.city}
+                  onChange={handleChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-2 w-2/5">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Zip Code</label>
+                <input
+                  type="text"
+                  name="zip"
+                  value={form.zip}
+                  onChange={handleChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={handleCenterFarm}
+              className="bg-indigo-400 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
+            >
+              Center Farm
+            </button>
+            <div className="mt-6">
+              <MapContainer center={mapCenter} zoom={14} style={{ height: '400px', width: '100%' }} ref={mapRef}>
+                <TileLayer
+                  url="http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                  subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+                />
+                <MapEvents />
+                {pins.map((pin, index) => (
+                  <Marker key={index} position={pin} icon={customIcon} />
+                ))}
+                {pins.length === 4 && (
+                  <Polygon positions={pins} color="blue" />
+                )}
+              </MapContainer>
+            </div>
+            <button
+              type="submit"
+              className="mt-4 bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700"
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              onClick={closeUpdateModal}
+              className="ml-4 bg-red-500 text-white py-2 px-4 rounded shadow hover:bg-red-700"
+            >
+              Cancel
+            </button>
+          </form>
         </div>
       </Modal>
     </div>
