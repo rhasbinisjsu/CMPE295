@@ -37,7 +37,7 @@ const Sidebar = () => {
             Farm
           </Link>
           <Link
-            to="/Crop"
+            to="/Crops"
             className={`block text-lg py-4 px-4 rounded transition duration-200 flex items-center ${
               isActive('/Crop') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
             }`}

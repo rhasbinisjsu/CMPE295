@@ -16,7 +16,7 @@ function UserLogin() {
   console.log('METRICS_SERVER_IP:', process.env.REACT_APP_METRICS_SERVER_IP);
   console.log('METRICS_SERVER_PORT:', process.env.REACT_APP_METRICS_SERVER_PORT);
 
-  
+
   const [formData, setFormData] = useState({
     uname: '',
     pswd: ''
@@ -69,7 +69,6 @@ function UserLogin() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
       <div className="flex-1 flex justify-center items-center">
         {error && <ErrorPopup message={error} />}
         <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-1/2">
