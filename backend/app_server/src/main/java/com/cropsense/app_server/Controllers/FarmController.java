@@ -44,14 +44,14 @@ public class FarmController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<HttpStatus> createFarm(
+    public ResponseEntity<?> createFarm(
         @RequestBody Farm newFarm
     ) throws SQLException{
 
         logger.logInfoMsg("POST [ ENTER ] - Received request to create new farm for user with ID " + Long.toString(newFarm.getOwnerId()));
         
         // define response
-        ResponseEntity<HttpStatus> response;
+        ResponseEntity<?> response;
         
         // check for name
         logger.logInfoMsg("Checking that name is valid");
@@ -62,8 +62,9 @@ public class FarmController {
         }
         else {
             logger.logInfoMsg("Name is available for the new farm creation");
-            fService.createFarm(newFarm);
-            response = new ResponseEntity<>(HttpStatus.CREATED);
+            Farm createdFarm = fService.createFarm(newFarm);
+            long createdFarmId = createdFarm.getId();
+            response = new ResponseEntity<Long>(createdFarmId,HttpStatus.CREATED);
         }
 
         logger.logInfoMsg("POST [ EXIT ] - Exiting request to create a new farm");

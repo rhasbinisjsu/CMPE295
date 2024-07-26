@@ -26,22 +26,23 @@ public class CropFenceService {
      * @return
      * @throws SQLException
      */
-    public boolean createCropFence(CropFence newCropFence) throws SQLException {
+    public CropFence createCropFence(CropFence newCropFence) throws SQLException {
      
         logger.logInfoMsg("Persisting a new crop fence for crop with ID: " + Long.toString(newCropFence.getCropId()));
-        boolean created = false;
+
+        CropFence createdCropFence;
 
         try {
             // check the fence can be created
             Optional<CropFence> ocf = cfRepo.findByCropId(newCropFence.getCropId());
             
             if (ocf.isEmpty()) {
-                cfRepo.save(newCropFence);
-                created = true;
+                createdCropFence = cfRepo.save(newCropFence);
                 logger.logInfoMsg("Successfully persisted the new crop fence");
             }
             else {
                 logger.logWarnMsg("Crop fence already exits... Not persisting new crop fence");
+                return null;
             }
 
         }
@@ -50,7 +51,7 @@ public class CropFenceService {
             throw new SQLException();
         }
 
-        return created;
+        return createdCropFence;
 
     }
 

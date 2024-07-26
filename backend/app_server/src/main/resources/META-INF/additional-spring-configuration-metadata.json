@@ -1,5 +1,12 @@
-{"properties": [{
-  "name": "endpoints.shutdown.enabled",
-  "type": "java.lang.String",
-  "description": "A description for 'endpoints.shutdown.enabled'"
-}]}
+{"properties": [
+  {
+    "name": "endpoints.shutdown.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'endpoints.shutdown.enabled'"
+  },
+  {
+    "name": "endpoints.shutdown.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'endpoints.shutdown.enabled'"
+  }
+]}

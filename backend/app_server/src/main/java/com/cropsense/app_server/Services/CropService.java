@@ -28,15 +28,14 @@ public class CropService {
      * @return
      * @throws SQLException
      */
-    public boolean createCrop(Crop newCrop) throws SQLException {
+    public Crop createCrop(Crop newCrop) throws SQLException {
 
         long farmId = newCrop.getFarmId();
-        boolean persisted = false;
         logger.logInfoMsg("Persisiting new crop for farm with ID: " + Long.toString(farmId));
 
+        Crop createdCrop;
         try {
-            cropRepo.save(newCrop);
-            persisted = true;
+            createdCrop = cropRepo.save(newCrop);
             logger.logInfoMsg("Successfully persisted the new crop");
         }
         catch(Exception e) {
@@ -44,7 +43,7 @@ public class CropService {
             throw new SQLException();
         }
 
-        return persisted;
+        return createdCrop;
 
     }
 

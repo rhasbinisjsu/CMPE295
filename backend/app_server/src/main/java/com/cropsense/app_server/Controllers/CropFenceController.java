@@ -41,26 +41,27 @@ public class CropFenceController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<HttpStatus> createCropFence(
+    public ResponseEntity<?> createCropFence(
         @RequestBody CropFence cropFence
     ) throws SQLException {
 
         logger.logInfoMsg("POST [ ENTER ] - Received request to create a new crop fence for crop with ID: " + Long.toString(cropFence.getCropId()));
-        ResponseEntity<HttpStatus> response;
-        boolean created = false;
+        ResponseEntity<?> response;
+        
+        CropFence createdCropFence;
 
         try {
-            created = cfService.createCropFence(cropFence);
-            
-            if (created) {
-                response = new ResponseEntity<>(HttpStatus.CREATED);
+            createdCropFence = cfService.createCropFence(cropFence);
+            if (createdCropFence == null) {
+                response = new ResponseEntity<>(HttpStatus.CONFLICT);
             }
             else {
-                response = new ResponseEntity<>(HttpStatus.CONFLICT);
+                long createdCfId = createdCropFence.getFenceId();
+                response = new ResponseEntity<Long>(createdCfId, HttpStatus.CREATED);
             }
         }
         catch (Exception e) {
-            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         logger.logInfoMsg("POST [ EXIT ] - Exiting request to create a new crop fence");

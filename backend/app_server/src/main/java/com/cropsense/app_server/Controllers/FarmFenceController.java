@@ -42,14 +42,14 @@ public class FarmFenceController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<HttpStatus> createFarmFence(
+    public ResponseEntity<?> createFarmFence(
         @RequestBody FarmFence newFence
     ) throws SQLException {
 
         logger.logInfoMsg("POST [ ENTER ] - Received request to create new farm fence for farm with ID: " + Long.toString(newFence.getFarmId()));
 
         // define response
-        ResponseEntity<HttpStatus> response;
+        ResponseEntity<?> response;
         
         // check farm fence does not exist for farmId
         logger.logInfoMsg("Checking if farm fence already exists for farm");
@@ -59,8 +59,9 @@ public class FarmFenceController {
             logger.logErrorMsg("Failed to create the new farm fence since once already exists for farm with ID: " + Long.toString(newFence.getFarmId()));
         }
         else {
-            ffService.createFarmFence(newFence);
-            response = new ResponseEntity<>(HttpStatus.CREATED);
+            FarmFence createdFarmFence = ffService.createFarmFence(newFence);
+            long createdFFId = createdFarmFence.getFenceId();
+            response = new ResponseEntity<Long>(createdFFId,HttpStatus.CREATED);
             logger.logInfoMsg("Successfully created farm fence for farm with ID: " + Long.toString(newFence.getFarmId()));
         }
 

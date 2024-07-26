@@ -44,7 +44,7 @@ public class CropController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<HttpStatus> createCrop(
+    public ResponseEntity<?> createCrop(
         @RequestBody Crop newCrop
     ) throws SQLException {
 
@@ -52,15 +52,15 @@ public class CropController {
 
         logger.logInfoMsg("POST [ ENTER ] - Received request to create a new Crop for farm with ID: " + Long.toString(farmId) );
 
-        ResponseEntity<HttpStatus> response;
-        boolean created;
+        ResponseEntity<?> response;
 
-        created = cropService.createCrop(newCrop);
-
-        if (created) {
-            response = new ResponseEntity<>(HttpStatus.CREATED);
+        Crop createdCrop; 
+        try {
+            createdCrop = cropService.createCrop(newCrop);
+            long createdCropId = createdCrop.getCropId();
+            response = new ResponseEntity<Long>(createdCropId,HttpStatus.CREATED);
         }
-        else {
+        catch(Exception e) {
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             logger.logErrorMsg("Failed to persist a new crop for farm with ID: " + Long.toString(farmId));
         }
