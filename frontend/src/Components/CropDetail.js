@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LineGraph from './LineGraph';
 import { Tab } from '@headlessui/react';
 import axios from 'axios';
-import { CameraIcon } from '@heroicons/react/24/solid';
+import { CameraIcon, BugAntIcon } from '@heroicons/react/24/solid';
 import { parseISO, format } from 'date-fns';
 
 
@@ -133,7 +133,7 @@ const CropDetail = () => {
       
       {/* Soil Metrics Line Graphs */}
       <div className="flex justify-center mt-6">
-        <div className="bg-white p-4 rounded-lg shadow justify-center w-1/2">
+        <div className="bg-white p-4 rounded-lg shadow-md  shadow-yellow-600 justify-center w-fit">
           <h2 className="text-2xl font-semibold mb-4">Soil Metrics</h2>
           <Tab.Group selectedIndex={selectedMetricIndex} onChange={setSelectedMetricIndex}>
             <Tab.List className="flex space-x-2 mb-4">
@@ -142,7 +142,7 @@ const CropDetail = () => {
                   key={index}
                   className={({ selected }) =>
                     `px-4 py-2 text-sm font-medium leading-5 text-white ${
-                      selected ? 'bg-blue-500' : 'bg-blue-300'
+                      selected ? 'bg-yellow-700' : 'bg-yellow-500'
                     } rounded-lg focus:outline-none`
                   }
                 >
@@ -153,7 +153,7 @@ const CropDetail = () => {
             <Tab.Panels>
               {soilMetricsTabs.map((metric, index) => (
                 <Tab.Panel key={index}>
-                  <LineGraph title={metric.title} data={formatDataForGraph(metric.data).seriesData} categories={formatDataForGraph(metric.data).categories} color={metric.color} />
+                  <LineGraph title={metric.title} data={formatDataForGraph(metric.data).seriesData} categories={formatDataForGraph(metric.data).categories} color='#eab308' />
                 </Tab.Panel>
               ))}
             </Tab.Panels>
@@ -162,8 +162,8 @@ const CropDetail = () => {
       </div>
 
       {/* Latest Detected Diseases and Disease Rate */}
-      <div className="flex justify-center mt-6 space-x-6">
-        <div className="bg-white p-4 rounded-lg shadow w-1/2">
+      <div className="flex justify-center mt-12 space-x-6">
+        <div className="bg-white p-4 rounded-lg shadow-md shadow-purple-600 w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Latest Detected Diseases</h2>
           <table className="min-w-full bg-white">
             <thead>
@@ -187,13 +187,13 @@ const CropDetail = () => {
           </table>
         </div>
 
-        <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md w-1/4">
-          <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
-            <CameraIcon className="h-6 w-6 text-white" />
+        <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md shadow-purple-600 w-2/5">
+          <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-purple-600 to-purple-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
+            <BugAntIcon className="h-6 w-6 text-white" />
           </div>
           <div className="p-4 text-right">
-            <p className="block antialiased font-sans text-m leading-normal font-normal text-blue-gray-600">Diseased Area</p>
-            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-900">{diseaseRatePercentage}%</h4>
+            <p className="block antialiased text-xl font-semibold leading-normal text-blue-gray-600">Latest Disease %</p>
+            <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-900">8%</h4>
           </div>
           <div className="border-t border-blue-gray-50 p-4">
             <p className="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
@@ -205,15 +205,16 @@ const CropDetail = () => {
 
       {/* Disease Rate Line Graph */}
       <div className="flex justify-center mt-6">
-        <div className="mt-6 bg-white p-4 rounded-lg shadow-md h-fit w-1/2">
+        <div className="mt-6 bg-white p-4 rounded-lg shadow-md shadow-purple-600 h-fit w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Disease Rate</h2>
-          <LineGraph title="Disease Rate" data={formattedDiseaseRateForAllDates.seriesData} categories={formattedDiseaseRateForAllDates.categories} color='#1c4d80' />
+          <LineGraph title="Disease Rate" data={formattedDiseaseRateForAllDates.seriesData} categories={formattedDiseaseRateForAllDates.categories} color='#a855f7' />
         </div>
       </div>
 
+
       {/* Species Anomalies */}
-      <div className="flex justify-center mt-6 space-x-6">
-        <div className="bg-white p-4 rounded-lg shadow w-1/2">
+      <div className="flex justify-center space-x-6 mt-12">
+        <div className="bg-white p-4 rounded-lg shadow-md shadow-pink-600 w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Latest Species Anomalies</h2>
           <table className="min-w-full bg-white">
             <thead>
@@ -234,16 +235,16 @@ const CropDetail = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      {/*</div>*/}
 
       {/* Anomaly Count */}
-      <div className="flex justify-center mt-6">
-        <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md w-1/4">
+      {/*<div className="flex justify-center mt-6">*/}
+        <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md shadow-pink-600 w-2/5">
           <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
             <CameraIcon className="h-6 w-6 text-white" />
           </div>
           <div className="p-4 text-right">
-            <p className="block antialiased text-xl font-semibold leading-normal font-normal text-blue-gray-600">Anomaly Count</p>
+            <p className="block antialiased text-xl font-semibold leading-normal text-blue-gray-600">Anomaly Count</p>
             <h4 className="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-900">{speciesAnomalyCount}</h4>
           </div>
           <div className="border-t border-blue-gray-50 p-4">
@@ -256,7 +257,7 @@ const CropDetail = () => {
 
       {/* Anomaly Count Line Graph */}
       <div className="flex justify-center mt-6">
-        <div className="mt-6 bg-white p-4 rounded-lg shadow-md h-fit w-1/2">
+        <div className="mt-6 bg-white p-4 rounded-lg shadow-md shadow-pink-600 h-fit w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Anomaly Count Over Time</h2>
           <LineGraph title="Anomaly Count Over Time" data={formattedSpeciesAnomalyCountOverTime.seriesData} categories={formattedSpeciesAnomalyCountOverTime.categories} color='#ec4899' />
         </div>
