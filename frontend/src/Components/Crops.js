@@ -910,7 +910,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
-import Sidebar from "./Sidebar";
 import Modal from 'react-modal';
 import { MapContainer, TileLayer, Marker, Polygon, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
@@ -1171,19 +1170,19 @@ function Crops() {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 flex justify-center items-start pt-40">
+      <div className="flex-1 flex justify-center items-start pt-10">
         <div className="w-fit">
           <div className="relative mb-8">
             {/* History Button */}
             <button
-              className="absolute top-1/2 right-32 transform -translate-y-1/2 bg-indigo-500 text-white py-2 px-4 rounded shadow hover:bg-indigo-700"
+              className="absolute top-1/2 right-32 transform -translate-y-1/2 bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
               onClick={openHistoryModal}
             >
               History
             </button>
             {/* Create Crop Button */}
             <button
-              className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700"
+              className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-indigo-500 text-white py-2 px-4 rounded shadow hover:bg-indigo-700"
               onClick={openCreateModal}
             >
               Create Crop
@@ -1321,7 +1320,7 @@ function Crops() {
               />
             </div>
             <div className="flex space-x-6 ">
-            <div className="mb-4 w-1/5">
+            <div className="mb-4 w-fit">
               <label className="block text-gray-700">Transplant Amount</label>
               <input
                 type="number"
@@ -1332,7 +1331,7 @@ function Crops() {
                 required
               />
             </div>
-            <div className="mb-4 w-1/5">
+            <div className="mb-4 w-fit">
               <label className="block text-gray-700">Cultivated Amount</label>
               <input
                 type="number"
@@ -1394,14 +1393,14 @@ function Crops() {
 
             <button
               type="submit"
-              className="mt-4 bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700"
+              className="mt-4 bg-indigo-500 text-white py-2 px-4 rounded shadow hover:bg-indigo-700"
             >
               Create Crop
             </button>
             <button
               type="button"
               onClick={closeCreateModal}
-              className="ml-4 bg-red-500 text-white py-2 px-4 rounded shadow hover:bg-red-700"
+              className="ml-4 bg-gray-500 text-white py-2 px-4 rounded shadow hover:bg-gray-700"
             >
               Cancel
             </button>
