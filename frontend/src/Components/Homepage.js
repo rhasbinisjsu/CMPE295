@@ -1,49 +1,44 @@
+import { useHistory } from 'react-router-dom';
+import logo from './styles/Crop.png';
 
-import Table from 'react-bootstrap/Table'
-import Button from 'react-bootstrap/Button'
-import Dropdown from 'react-bootstrap/Dropdown';
-import Sidebar from './Sidebar';
-
-import { Grid } from '@mui/material'
-import logo from './styles/Crop.png'
-
-import axios from 'axios';
-import {Routes, Route, useHistory} from 'react-router-dom'
-// import LocalHospitalSharpIcon from '@mui/icons-material/LocalHospitalSharp';
-// import './styles/Homepage.css';
-// import background from './styles/backgroundimg.jpeg'
-
-
-
-
-function Homepage(){
+function Homepage() {
     const history = useHistory();
 
-    function handleUserLoginClick(){
-        history.push("/userLogin")
+    function handleUserLoginClick() {
+        history.push('/userLogin');
     }
-    function handleUserSignUpClick(){
-        history.push("/userSignUp")
+
+    function handleUserSignUpClick() {
+        history.push('/userSignUp');
     }
-    function handleUserDashboardClick(){
-        history.push("/userDashboard")
-    }
-    
-    return(
-    <div>
-        <Grid align ='center'> 
-        <h1>
-            
-            Welcome to CropSense
-            <img src={logo} alt="Logo" style={{ height: '60px', width: '60px', marginRight: '10px' }} />
-        </h1>
-        <div className='homepage'>
-                        <Button onClick={handleUserLoginClick}>Log In </Button>
-                        <Button onClick={handleUserSignUpClick}>Sign Up</Button>
-                        <Button onClick={handleUserDashboardClick}>Dashboard</Button>
-                    </div>
-        </Grid>
-    </div>
-    )
+
+
+
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
+          <div className="text-center">
+              <h1 className="text-4xl font-bold mb-6 flex items-center justify-center">
+                  Welcome to CropSense
+                  <img src={logo} alt="Logo" className="h-16 w-16 ml-4" />
+              </h1>
+              <div className="space-x-4">
+                  <button
+                    onClick={handleUserLoginClick}
+                    className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition duration-200"
+                  >
+                      Log In
+                  </button>
+                  <button
+                    onClick={handleUserSignUpClick}
+                    className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-700 transition duration-200"
+                  >
+                      Sign Up
+                  </button>
+
+              </div>
+          </div>
+      </div>
+    );
 }
+
 export default Homepage;
