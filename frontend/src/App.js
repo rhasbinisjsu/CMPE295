@@ -107,7 +107,7 @@ function AppContent() {
             <Route path="/userLogin" component={UserLogin} />
             <Route path="/userSignUp" component={UserSignup} />
             <Route path="/Farm" component={Farm} />
-            <Route path="/Crop" component={Crops} />
+            <Route path="/Crops" component={Crops} />
             <Route path="/Mission" component={Mission} />
             <Route path="/userDashboard" component={UserDashboard} />
             <Route path="/farmDetail/:id" component={FarmDetail} />

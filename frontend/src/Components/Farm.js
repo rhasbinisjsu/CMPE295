@@ -239,7 +239,7 @@ function Farm() {
 
   return (
     <div className="flex h-screen">
-      <div className="flex-1 flex justify-center items-start pt-40">
+      <div className="flex-1 flex justify-center items-start pt-10">
         <div className="w-3/4">
           <div className="relative">
             <button
@@ -296,60 +296,67 @@ function Farm() {
             </table>
           </div>
 
-          <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
-            <h2 className="text-xl font-bold mb-4">Create Farm</h2>
-            <form onSubmit={handleSubmit}>
-              <label className="block mb-2">
-                Name:
-                <input
-                  type="text"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  className="block w-full border p-2 rounded"
-                />
-              </label>
-              <label className="block mb-2">
-                Street:
-                <input
-                  type="text"
-                  name="street"
-                  value={form.street}
-                  onChange={handleChange}
-                  className="block w-full border p-2 rounded"
-                />
-              </label>
-              <label className="block mb-2">
-                City:
-                <input
-                  type="text"
-                  name="city"
-                  value={form.city}
-                  onChange={handleChange}
-                  className="block w-full border p-2 rounded"
-                />
-              </label>
-              <label className="block mb-2">
-                ZIP:
-                <input
-                  type="text"
-                  name="zip"
-                  value={form.zip}
-                  onChange={handleChange}
-                  className="block w-full border p-2 rounded"
-                />
-              </label>
-              <div className="mb-4">
+          <Modal
+            isOpen={isModalOpen}
+            onRequestClose={closeModal}
+            contentLabel="Create Farm"
+            className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
+            ariaHideApp={false}
+          >
+            <div className="bg-white p-6 rounded-lg w-1/2 max-h-full overflow-auto">
+              <h2 className="text-3xl mb-4 font-bold">Create Farm</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-2 w-1/2">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">Farm Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-2">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">Street</label>
+                  <input
+                    type="text"
+                    name="street"
+                    value={form.street}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="flex space-x-4">
+                  <div className="mb-2 w-3/5 mr-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={form.city}
+                      onChange={handleChange}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                  </div>
+                  <div className="mb-2 w-2/5">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Zip Code</label>
+                    <input
+                      type="text"
+                      name="zip"
+                      value={form.zip}
+                      onChange={handleChange}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                  </div>
+                </div>
                 <button
                   type="button"
                   onClick={handleCenterFarm}
-                  className="bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
+                  className="bg-indigo-400 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
                 >
-                  Center Farm on Map
+                  Center Farm
                 </button>
-              </div>
-              <div className="mb-4">
-                <MapContainer center={mapCenter} zoom={14} style={{ height: '400px', width: '100%' }} ref={mapRef}>
+                <div className="mt-6">
+                  <MapContainer center={mapCenter} zoom={14} style={{ height: '400px', width: '100%' }} ref={mapRef}>
                     <TileLayer
                       url="http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
                       subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
@@ -358,88 +365,118 @@ function Farm() {
                     {pins.map((pin, index) => (
                       <Marker key={index} position={pin} icon={customIcon} />
                     ))}
-                    {pins.length > 2 && (
+                    {pins.length === 4 && (
                       <Polygon positions={pins} color="blue" />
                     )}
                   </MapContainer>
-              </div>
-              <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700">
-                Submit
-              </button>
-            </form>
+                </div>
+                <button
+                  type="submit"
+                  className="mt-4 bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700"
+                >
+                  Create
+                </button>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="ml-4 bg-red-500 text-white py-2 px-4 rounded shadow hover:bg-red-700"
+                >
+                  Cancel
+                </button>
+              </form>
+            </div>
           </Modal>
 
-          <Modal isOpen={isUpdateModalOpen} onRequestClose={closeUpdateModal}>
-            <h2 className="text-xl font-bold mb-4">Update Farm</h2>
-            <form onSubmit={handleUpdateSubmit}>
-              <label className="block mb-2">
-                Name:
-                <input
-                  type="text"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  className="block w-full border p-2 rounded"
-                />
-              </label>
-              <label className="block mb-2">
-                Street:
-                <input
-                  type="text"
-                  name="street"
-                  value={form.street}
-                  onChange={handleChange}
-                  className="block w-full border p-2 rounded"
-                />
-              </label>
-              <label className="block mb-2">
-                City:
-                <input
-                  type="text"
-                  name="city"
-                  value={form.city}
-                  onChange={handleChange}
-                  className="block w-full border p-2 rounded"
-                />
-              </label>
-              <label className="block mb-2">
-                ZIP:
-                <input
-                  type="text"
-                  name="zip"
-                  value={form.zip}
-                  onChange={handleChange}
-                  className="block w-full border p-2 rounded"
-                />
-              </label>
-              <div className="mb-4">
+          <Modal
+            isOpen={isUpdateModalOpen}
+            onRequestClose={closeUpdateModal}
+            contentLabel="Update Farm"
+            className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
+            ariaHideApp={false}
+          >
+            <div className="bg-white p-6 rounded-lg w-1/2 max-h-full overflow-auto">
+              <h2 className="text-3xl mb-4 font-bold">Update Farm</h2>
+              <form onSubmit={handleUpdateSubmit}>
+
+                <div className="mb-2 w-1/2">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">Farm Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-2">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">Street</label>
+                  <input
+                    type="text"
+                    name="street"
+                    value={form.street}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="flex space-x-4">
+                  <div className="mb-2 w-3/5 mr-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={form.city}
+                      onChange={handleChange}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                  </div>
+                  <div className="mb-2 w-2/5">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Zip Code</label>
+                    <input
+                      type="text"
+                      name="zip"
+                      value={form.zip}
+                      onChange={handleChange}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                  </div>
+                </div>
                 <button
                   type="button"
                   onClick={handleCenterFarm}
-                  className="bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
+                  className="bg-indigo-400 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
                 >
-                  Center Farm on Map
+                  Center Farm
                 </button>
-              </div>
-              <div className="mb-4">
-                <MapContainer center={mapCenter} zoom={14} style={{ height: "400px", width: "100%" }}>
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  />
-                  <MapEvents />
-                  {pins.map((pin) => (
-                    <Marker key={pin.id} position={[pin.lat, pin.lng]} icon={customIcon} />
-                  ))}
-                  {pins.length === 4 && (
-                    <Polygon positions={pins.map(pin => [pin.lat, pin.lng])} color="red" />
-                  )}
-                </MapContainer>
-              </div>
-              <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded shadow hover:bg-green-700">
-                Submit
-              </button>
-            </form>
+                <div className="mt-6">
+                  <MapContainer center={mapCenter} zoom={14} style={{ height: '400px', width: '100%' }} ref={mapRef}>
+                    <TileLayer
+                      url="http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                      subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+                    />
+                    <MapEvents />
+                    {pins.map((pin, index) => (
+                      <Marker key={index} position={pin} icon={customIcon} />
+                    ))}
+                    {pins.length === 4 && (
+                      <Polygon positions={pins} color="blue" />
+                    )}
+                  </MapContainer>
+                </div>
+                <button
+                  type="submit"
+                  className="mt-4 bg-yellow-500 text-white py-2 px-4 rounded shadow hover:bg-yellow-700"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  onClick={closeUpdateModal}
+                  className="ml-4 bg-gray-500 text-white py-2 px-4 rounded shadow hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+              </form>
+            </div>
           </Modal>
         </div>
       </div>
