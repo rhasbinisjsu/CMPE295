@@ -95,7 +95,7 @@ const CropDetail = () => {
   }, []);
 
   if (!soilMetricsData || !diseaseData || diseaseRate === null || !diseaseRateForAllDates || !speciesAnomalies || speciesAnomalyCountOverTime === null) {
-    return <div>Loading...</div>;
+    return <div>No Metrics To Show</div>;
   }
 
   const soilMetricsTabs = [
