@@ -1,13 +1,190 @@
-import React, { useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Sidebar from '../Components/Sidebar';
+import {MapContainer, Marker, Polygon, TileLayer, useMap, useMapEvents} from "react-leaflet";
+import L from "leaflet";
+import 'leaflet.gridlayer.googlemutant';
+import axios from "axios";
+
 
 function UserDashboard() {
   const [data, setData] = useState(null);
+    const [pins, setPins] = useState([]);
+    const [mapCenter, setMapCenter] = useState([36.9668383, -121.5013172])
+    const [analysisResults, setAnalysisResults] = useState({ cropsIdentified: 0, diseaseRate: 0 });
+    const mapRef = useRef(null);
+    const pinCounter = useRef(0);
+    const [form, setForm] = useState({
+        id: '',
+        name: '',
+        street: '',
+        city: '',
+        zip: '',
+    });
+
+    const handleChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleCenterFarm = async () => {
+        const address = `${form.street}, ${form.city}, ${form.zip}`;
+        const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyAox0FCdmVGMR71gBdrCW3yGlgNTStu7m4`;
+
+        try {
+            const response = await axios.get(geocodeUrl);
+            console.log("Geocode API Response:", response.data);
+
+            if (response.data.status === "OK" && response.data.results.length > 0) {
+                const { lat, lng } = response.data.results[0].geometry.location;
+                setMapCenter([lat, lng]);
+                if (mapRef.current) {
+                    mapRef.current.setView([lat, lng], 14);
+                }
+            } else {
+                console.error("Geocoding failed: No results found.");
+            }
+        } catch (error) {
+            console.error("Error geocoding the address:", error);
+        }
+    };
+
+    const addPin = (e) => {
+        if (pins.length < 4) {
+            const newPin = {
+                id: pinCounter.current++, // Unique ID for each pin
+                lat: e.latlng.lat,
+                lng: e.latlng.lng
+            };
+            setPins([...pins, newPin]);
+            console.log("Pin added:", newPin);
+        }
+    };
+
+    const MapEvents = () => {
+        const map = useMap();
+        useMapEvents({
+            click: addPin,
+        });
+
+        useEffect(() => {
+            mapRef.current = map;
+        }, [map]);
+
+        return null;
+    };
+
+    const performAnalysis = () => {
+        // Perform analysis logic here
+        // This is just a mock result for demonstration
+        setAnalysisResults({ cropsIdentified: 4, diseaseRate: 5.5 });
+    };
+
+    const reselectField = () => {
+        setPins([]);
+        setAnalysisResults({ cropsIdentified: 0, diseaseRate: 0 });
+    };
+
+    const customIconHtml = `
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+    </svg>
+  `;
+
+    const customIcon = new L.DivIcon({
+        html: customIconHtml,
+        iconSize: [24, 24],
+        iconAnchor: [12, 24],
+        className: ""
+    });
 
   return (
-    <div className="flex bg-gray-100">
+      <div className="flex flex-col bg-gray-100">
+          <div className="flex">
+              <div className="w-4/5 mt-6">
+                  <MapContainer center={mapCenter} zoom={15} style={{ height: '70vh', width: '100%' }} ref={mapRef}>
+                      <TileLayer
+                          url="http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                          subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+                      />
+                      <MapEvents />
+                      {pins.map((pin, index) => (
+                          <Marker key={index} position={pin} icon={customIcon} />
+                      ))}
+                      {pins.length === 4 && (
+                          <Polygon positions={pins} color="blue" />
+                      )}
+                  </MapContainer>
+              </div>
+              <div className="w-1/5 p-6">
+                  <h2 className="text-2xl font-bold mb-4">Farm Analysis</h2>
 
-      <div className="flex-1 p-4 mt-5 ">
+                  <div className="mb-2">
+                      <label className="block text-gray-700 text-sm font-bold mb-2">Street</label>
+                      <input
+                          type="text"
+                          name="street"
+                          value={form.street}
+                          onChange={handleChange}
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      />
+                  </div>
+                  <div className="flex space-x-4">
+                      <div className="mb-2 w-3/5 mr-1">
+                          <label className="block text-gray-700 text-sm font-bold mb-2">City</label>
+                          <input
+                              type="text"
+                              name="city"
+                              value={form.city}
+                              onChange={handleChange}
+                              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          />
+                      </div>
+                      <div className="mb-2 w-2/5">
+                          <label className="block text-gray-700 text-sm font-bold mb-2">Zip Code</label>
+                          <input
+                              type="text"
+                              name="zip"
+                              value={form.zip}
+                              onChange={handleChange}
+                              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          />
+                      </div>
+                  </div>
+
+                  <div className="flex flex-col mt-4 gap-4">
+                          <button
+                              type="button"
+                              onClick={handleCenterFarm}
+                              className="bg-blue-500 text-white py-2 px-1 rounded shadow hover:bg-blue-700"
+                          >
+                              Center Farm
+                          </button>
+                          <button
+                              className="bg-gray-500 text-white py-2 px-1 rounded shadow hover:bg-gray-700"
+                              onClick={reselectField}
+                          >
+                              Reselect Farm
+                          </button>
+
+                      <button
+                          className="bg-blue-500 text-white py-2 px-4 rounded shadow hover:bg-blue-700"
+                          onClick={performAnalysis}
+                      >
+                          Perform Analysis
+                      </button>
+                  </div>
+                  <div className="mt-6">
+                      <h3 className="text-xl font-semibold">Analysis Results</h3>
+                      <p className="mt-4"><strong>Crops Identified:</strong> {analysisResults.cropsIdentified}</p>
+                      <p className="mt-2"><strong>Disease Rate:</strong> {analysisResults.diseaseRate}%</p>
+                  </div>
+              </div>
+          </div>
+
+      <div className="flex-1 p-4 mt-10 ">
         {/* Boxes Container */}
         <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 mb-12">
           <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md">
