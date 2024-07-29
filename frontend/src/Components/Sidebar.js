@@ -36,24 +36,24 @@ const Sidebar = () => {
             <MapIcon className="h-5 w-5 mr-2" />
             Farm
           </Link>
-          <Link
-            to="/Crops"
-            className={`block text-lg py-4 px-4 rounded transition duration-200 flex items-center ${
-              isActive('/Crop') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
-            }`}
-          >
-            <SquaresPlusIcon className="h-5 w-5 mr-2" />
-            Crop
-          </Link>
-          <Link
-            to="/Mission"
-            className={`block text-lg py-4 px-4 rounded transition duration-200 flex items-center ${
-              isActive('/Mission') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'
-            }`}
-          >
-            <CursorArrowRippleIcon className="h-5 w-5 mr-2" />
-            Mission
-          </Link>
+          {/*<Link*/}
+          {/*  to="/Crops"*/}
+          {/*  className={`block text-lg py-4 px-4 rounded transition duration-200 flex items-center ${*/}
+          {/*    isActive('/Crop') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'*/}
+          {/*  }`}*/}
+          {/*>*/}
+          {/*  <SquaresPlusIcon className="h-5 w-5 mr-2" />*/}
+          {/*  Crop*/}
+          {/*</Link>*/}
+          {/*<Link*/}
+          {/*  to="/Mission"*/}
+          {/*  className={`block text-lg py-4 px-4 rounded transition duration-200 flex items-center ${*/}
+          {/*    isActive('/Mission') ? 'text-indigo-700 font-bold bg-indigo-100' : 'hover:bg-indigo-600 hover:text-white'*/}
+          {/*  }`}*/}
+          {/*>*/}
+          {/*  <CursorArrowRippleIcon className="h-5 w-5 mr-2" />*/}
+          {/*  Mission*/}
+          {/*</Link>*/}
         </nav>
       </div>
       <div className="mb-4 px-4">
