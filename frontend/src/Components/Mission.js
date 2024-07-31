@@ -80,15 +80,6 @@ function Mission() {
       status: 'Pending',
     };
 
-    // Example of API call:
-    // await fetch('/api/missions', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(newMission),
-    // });
-
     setData([...data, newMission]);
     closeModal();
   };
@@ -110,7 +101,7 @@ function Mission() {
 
   return (
     <div className="flex h-screen ">
-      <Sidebar />
+
       <div className="flex-1 flex justify-center items-start pt-40">
         <div className="w-3/4">
           <div className="relative">
