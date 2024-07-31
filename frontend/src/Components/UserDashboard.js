@@ -79,9 +79,10 @@ function UserDashboard() {
         return null;
     };
 
-    const performAnalysis = () => {
-        // Perform analysis logic here
-        // This is just a mock result for demonstration
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const performAnalysis = async () => {
+        
+        await sleep(2000)
         setAnalysisResults({ cropsIdentified: 4, diseaseRate: 5.5 });
     };
 

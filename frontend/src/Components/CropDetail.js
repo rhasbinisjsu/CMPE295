@@ -25,11 +25,17 @@ const CropDetail = () => {
   const [speciesAnomalies, setSpeciesAnomalies] = useState(null);
   const [speciesAnomalyCount, setSpeciesAnomalyCount] = useState(0);
   const [speciesAnomalyCountOverTime, setSpeciesAnomalyCountOverTime] = useState(null);
+  const [latestSoilMetrics, setLatestSoilMetrics] = useState(null);
+  const [latestMetricGatherDate, setlatestMetricGatherDate] = useState(null);
+
+  const [latestDiseaseMetrics, setLatestDiseaseMetrics] = useState(null);
+  // const [latestSpeciesMetrics, setLatestSpeciesMetrics] = useState(null);
+  const [latestSpeciesMetrics, setLatestSpeciesMetrics] = useState(null);
 
   useEffect(() => {
     const cropId = sessionStorage.getItem('cropId') || 9;
 
-    // Fetch soil metrics data
+
     axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SoilMetricsController/getIndividualizedMetricsForCrop?cropId=${cropId}`)
       .then(response => {
         setSoilMetricsData(response.data);
@@ -38,7 +44,7 @@ const CropDetail = () => {
         console.error('There was an error fetching the soil metrics data!', error);
       });
 
-    // Fetch disease data
+
     axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/DiseaseMetricsController/getLatestDetectedDiseases?cropId=${cropId}`)
       .then(response => {
         setDiseaseData(response.data);
@@ -47,7 +53,7 @@ const CropDetail = () => {
         console.error('There was an error fetching the disease data!', error);
       });
 
-    // Fetch disease rate data
+    
     axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/DiseaseMetricsController/calculateLatestDiseaseRate?cropId=${cropId}`)
       .then(response => {
         setDiseaseRate(response.data);
@@ -56,7 +62,7 @@ const CropDetail = () => {
         console.error('There was an error fetching the disease rate data!', error);
       });
 
-    // Fetch disease rate for all dates data
+ 
     axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/DiseaseMetricsController/calculateDiseaseRateForAllDates?cropId=${cropId}`)
       .then(response => {
         setDiseaseRateForAllDates(response.data);
@@ -65,7 +71,7 @@ const CropDetail = () => {
         console.error('There was an error fetching the disease rate for all dates data!', error);
       });
 
-    // Fetch species anomalies data
+
     axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SpeciesMetricsController/compileLatestSpeciesAnomaliesForCrop?cropId=${cropId}`)
       .then(response => {
         setSpeciesAnomalies(response.data);
@@ -74,7 +80,7 @@ const CropDetail = () => {
         console.error('There was an error fetching the species anomalies data!', error);
       });
 
-    // Fetch species anomaly count data
+   
     axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SpeciesMetricsController/countLatestSpeciesAnomaliesForCrop?cropId=${cropId}`)
       .then(response => {
         setSpeciesAnomalyCount(response.data);
@@ -83,7 +89,7 @@ const CropDetail = () => {
         console.error('There was an error fetching the species anomaly count data!', error);
       });
 
-    // Fetch species anomaly count over time data
+
     axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SpeciesMetricsController/calculateSpeciesAnomalyCountForCropOverTime?cropId=${cropId}`)
       .then(response => {
         setSpeciesAnomalyCountOverTime(response.data);
@@ -91,6 +97,40 @@ const CropDetail = () => {
       .catch(error => {
         console.error('There was an error fetching the species anomaly count over time data!', error);
       });
+
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SoilMetricsController/getLatestIndividualSoilMetrics?cropId=${cropId}`)
+    .then(response => {
+      setLatestSoilMetrics(response.data);
+    })
+    .catch(error => {
+      console.error('There was an error fetching latest soil metrics', error);
+    });
+
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SoilMetricsController/getLatestMetricsDate?cropId=${cropId}`).then(response => {
+      setlatestMetricGatherDate(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching latest metric gather date', error);
+    });
+
+    var date;
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/DiseaseMetricsController/getLatestDiseaseEntryDate?cropId=${cropId}`).then(response => {
+      date = new Date(setLatestDiseaseMetrics(response.data));
+      setLatestDiseaseMetrics(response.data);
+      latestDiseaseMetrics = date
+    })
+    .catch(error => {
+      console.error('Error fetching latest metric gather date', error);
+    });
+
+    
+    axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SpeciesMetricsController/getLatestEntryDate?cropId=${cropId}`).then(response => {
+      setLatestSpeciesMetrics(response.data);
+      // console.log(latestSpeciesMetrics)
+    })
+    .catch(error => {
+      console.error('Error fetching latest species metric gather date', error);
+    });
 
   }, []);
 
@@ -127,11 +167,47 @@ const CropDetail = () => {
     });
   });
 
+
+
   return (
     <div className="container mx-auto p-6 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6">Crop Detail</h1>
+      <h1 className="text-3xl font-bold mb-6">Crop Metrics Dashboard</h1>
+
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Soil Metrics</h1>
+          <div className="p-2 bg-white rounded-lg shadow-md shadow-yellow-500 text-center w-1/5">
+            <h2 className="text-lg font-semibold mb-1">Latest Metric Gathered Date</h2>
+            <p className="text-xl">{latestMetricGatherDate}</p>
+          </div>
+      </div>
       
-      {/* Soil Metrics Line Graphs */}
+
+      <div className="grid grid-cols-5 gap-4 mb-6">
+        <div className="p-4 bg-white rounded-lg shadow-md shadow-yellow-500 text-center">
+          <h2 className="text-xl font-semibold mb-2">Moisture Level</h2>
+          <p className="text-2xl">{latestSoilMetrics.moisture}</p>
+        </div>
+        
+        <div className="p-4 bg-white rounded-lg shadow-md shadow-yellow-500 text-center">
+          <h2 className="text-xl font-semibold mb-2">pH</h2>
+          <p className="text-2xl">{latestSoilMetrics.ph}</p>
+        </div>
+        <div className="p-4 bg-white rounded-lg shadow-md shadow-yellow-500 text-center">
+          <h2 className="text-xl font-semibold mb-2">Nitrogen</h2>
+          <p className="text-2xl">{latestSoilMetrics.nitrogen}</p>
+        </div>
+        <div className="p-4 bg-white rounded-lg shadow-md shadow-yellow-500 text-center">
+          <h2 className="text-xl font-semibold mb-2">Phosphorous</h2>
+          <p className="text-2xl">{latestSoilMetrics.phosphorous}</p>
+        </div>
+        <div className="p-4 bg-white rounded-lg shadow-md shadow-yellow-500 text-center">
+          <h2 className="text-xl font-semibold mb-2">Potassium</h2>
+          <p className="text-2xl">{latestSoilMetrics.potassium}</p>
+        </div>
+      </div>
+      
+      
+      
       <div className="flex justify-center mt-6">
         <div className="bg-white p-4 rounded-lg shadow-md  shadow-yellow-600 justify-center w-fit">
           <h2 className="text-2xl font-semibold mb-4">Soil Metrics</h2>
@@ -161,10 +237,22 @@ const CropDetail = () => {
         </div>
       </div>
 
-      {/* Latest Detected Diseases and Disease Rate */}
+      <hr className='my-6 border-2 mt-20'/>
+
+      <div className="flex items-center justify-between mb-5 mt-20">
+        <h1 className="text-3xl font-bold">Disease Metrics </h1>
+          <div className="p-2 bg-white rounded-lg shadow-md shadow-purple-500 text-center w-1/5">
+            <h2 className="text-lg font-semibold mb-1">Latest Disease Metric Gathered Date</h2>
+            <p className="text-xl">{latestDiseaseMetrics}</p>
+          </div>
+      </div>
+
       <div className="flex justify-center mt-12 space-x-6">
+        
         <div className="bg-white p-4 rounded-lg shadow-md shadow-purple-600 w-1/2">
+          
           <h2 className="text-2xl font-semibold mb-4">Latest Detected Diseases</h2>
+
           <table className="min-w-full bg-white">
             <thead>
               <tr>
@@ -203,7 +291,7 @@ const CropDetail = () => {
         </div>
       </div>
 
-      {/* Disease Rate Line Graph */}
+      
       <div className="flex justify-center mt-6">
         <div className="mt-6 bg-white p-4 rounded-lg shadow-md shadow-purple-600 h-fit w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Disease Rate</h2>
@@ -212,7 +300,16 @@ const CropDetail = () => {
       </div>
 
 
-      {/* Species Anomalies */}
+      <hr className='my-6 border-2 mt-20'/>
+
+      <div className="flex items-center justify-between mb-6 mt-20">
+        <h1 className="text-3xl font-bold">Species Anomaly Metrics</h1>
+          <div className="p-2 bg-white rounded-lg shadow-md shadow-pink-600 text-center w-1/5">
+            <h2 className="text-lg font-semibold mb-1">Latest Species Anomaly Metric Gathered Date</h2>
+            <p className="text-xl">{latestDiseaseMetrics}</p>
+          </div>
+      </div>
+
       <div className="flex justify-center space-x-6 mt-12">
         <div className="bg-white p-4 rounded-lg shadow-md shadow-pink-600 w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Latest Species Anomalies</h2>
@@ -235,10 +332,7 @@ const CropDetail = () => {
             </tbody>
           </table>
         </div>
-      {/*</div>*/}
-
-      {/* Anomaly Count */}
-      {/*<div className="flex justify-center mt-6">*/}
+      
         <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md shadow-pink-600 w-2/5">
           <div className="bg-clip-border mx-4 rounded-xl overflow-hidden bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 grid h-16 w-16 place-items-center">
             <CameraIcon className="h-6 w-6 text-white" />
@@ -255,7 +349,7 @@ const CropDetail = () => {
         </div>
       </div>
 
-      {/* Anomaly Count Line Graph */}
+      
       <div className="flex justify-center mt-6">
         <div className="mt-6 bg-white p-4 rounded-lg shadow-md shadow-pink-600 h-fit w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Anomaly Count Over Time</h2>

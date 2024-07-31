@@ -18,11 +18,14 @@ function Farm() {
   const APP_SERVER_IP = process.env.REACT_APP_APP_SERVER_IP;
   const APP_SERVER_PORT = process.env.REACT_APP_APP_SERVER_PORT;
   const FARM_FENCE_API_URL = `http://44.204.8.116:8000/CropSense/AppServer/FarmFenceController/createFarmFence`;
+  const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
   const history = useHistory();
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [newFarmName, setNewFarmName] = useState('');
+  const [newAddress, setNewAddress] = useState('');
   const [form, setForm] = useState({
     id: '',
     name: '',
@@ -41,6 +44,7 @@ function Farm() {
     try {
       const response = await axios.get(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/fetchFarmsForOwner?ownerId=${userId}`);
       setData(response.data);
+      console.log(response.data)
     } catch (error) {
       console.error("Error fetching farms:", error);
     }
@@ -81,6 +85,88 @@ function Farm() {
       alert("Error deleting farm.");
     }
   };
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+        // Update farm name
+        await axios.put(
+            `http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/changeFarmName`,
+            form.name, // The farm name as plain text in the request body
+            {
+                params: {
+                    farmId: form.id,
+                    ownerId: sessionStorage.getItem('userId'),
+                },
+                headers: {
+                    'Content-Type': 'text/plain', // Content type is plain text
+                },
+            }
+        );
+        console.log("Farm name updated successfully.");
+
+        const newAddress = `${form.street}, ${form.city}, ${form.zip}`;
+        await axios.put(
+            `http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/changeFarmAddress`,
+            newAddress, 
+            {
+                params: {
+                    farmId: form.id,
+                },
+                headers: {
+                    'Content-Type': 'text/plain', 
+                },
+            }
+        );
+        console.log("Farm address updated successfully.");
+  
+        // Update the farm data in the state
+        setData(data.map(farm => (farm.id === form.id ? { ...farm, name: form.name, address: { ...farm.address, line1: form.street, city: form.city, zip: form.zip } } : farm)));
+  
+    } catch (error) {
+        console.error("Error updating farm: ", error);
+    }
+  
+    closeUpdateModal();
+    window.location.reload();
+};
+
+
+  // const handleUpdateSubmit = async (e) => {
+  //   e.preventDefault();
+    
+  //   try {
+      
+  //     await axios.put(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/changeFarmName?farmId=${form.id}&ownerId=${sessionStorage.getItem('userId')}`, null, {
+  //       params: {
+  //         farmId: form.id,
+  //         ownerId: sessionStorage.getItem('userId'),
+  //       },
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       data: {
+  //         newFarmName: form.name,
+  //       },
+  //     });
+  //     console.log("Farm name updated successfully.");
+
+
+  //     const newAddress = `${form.street}, ${form.city}, ${form.zip}`;
+  //     await axios.post(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/changeFarmAddress?farmId=${form.id}&newAddress=${encodeURIComponent(newAddress)}`);
+  //     console.log("Farm address updated successfully.");
+  
+  //     // Update the farm data in the state
+  //     setData(data.map(farm => (farm.id === form.id ? { ...farm, name: form.name, address: { ...farm.address, line1: form.street, city: form.city, zip: form.zip } } : farm)));
+  
+  //   } catch (error) {
+  //     console.error("Error updating farm: ", error);
+  //   }
+  
+  //   closeUpdateModal();
+  //   window.location.reload();
+  // };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -175,13 +261,13 @@ function Farm() {
   
     try {
       // Call the API to create the farm
-      const farmResponse = await axios.post('http://44.204.8.116:8000/CropSense/AppServer/FarmController/createFarm', farmData);
+      const farmResponse = await axios.post(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/createFarm`, farmData);
       const farmId = farmResponse.data; 
       sessionStorage.setItem('farmId', farmId);
       console.log("Farm created with ID:", farmId);
   
       // Call the API to create the farm fence
-      const fenceResponse = await axios.post('http://44.204.8.116:8000/CropSense/AppServer/FarmFenceController/createFarmFence', {
+      const fenceResponse = await axios.post(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmFenceController/createFarmFence`, {
         farmId: farmId,
       });
       const fenceId = fenceResponse.data;
@@ -209,19 +295,6 @@ function Farm() {
     closeModal();
     window.location.reload();
   };
-  
-  
-
-  const handleUpdateSubmit = async (e) => {
-    e.preventDefault();
-    const updatedFarm = {
-      id: form.id,
-      name: form.name,
-      location: `${form.street}, ${form.city}, ${form.zip}`,
-    };
-    setData(data.map(farm => (farm.id === updatedFarm.id ? updatedFarm : farm)));
-    closeUpdateModal();
-  };
 
   const customIconHtml = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
@@ -237,6 +310,7 @@ function Farm() {
     className: ""
   });
 
+
   return (
     <div className="flex h-screen">
       <div className="flex-1 flex justify-center items-start pt-10">
@@ -249,6 +323,7 @@ function Farm() {
               Create Farm
             </button>
           </div>
+
           <div className="mt-16">
             <h1 className="text-3xl font-bold mb-4">Farms</h1>
             <table className="min-w-full bg-white">
@@ -386,7 +461,6 @@ function Farm() {
               </form>
             </div>
           </Modal>
-
           <Modal
             isOpen={isUpdateModalOpen}
             onRequestClose={closeUpdateModal}
@@ -478,6 +552,7 @@ function Farm() {
               </form>
             </div>
           </Modal>
+
         </div>
       </div>
     </div>
@@ -485,4 +560,9 @@ function Farm() {
 }
 
 export default Farm;
+
+
+
+
+
 
