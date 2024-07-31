@@ -26,7 +26,7 @@ public class MetricsServerApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowCredentials(false);
+				registry.addMapping("/**").allowCredentials(false).allowedMethods("POST", "GET", "PUT", "DELETE");
 			}
 		};
 	}
