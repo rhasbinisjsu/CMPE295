@@ -64,9 +64,9 @@ const DonutChart = () => {
             total: {
               showAlways: true,
               show: true,
-              label: "Unique Crops",
+              label: "Active Crops",
               fontFamily: "Inter, sans-serif",
-              fontSize: '16px', // Change total label font size
+              fontSize: '16px',
               formatter: function (w) {
                 const sum = w.globals.seriesTotals.reduce((a, b) => {
                   return a + b;
@@ -77,14 +77,14 @@ const DonutChart = () => {
             value: {
               show: true,
               fontFamily: "Inter, sans-serif",
-              fontSize: '20px', // Change value font size
+              fontSize: '20px',
               offsetY: -20,
               formatter: function (value) {
                 return value;
               },
             },
           },
-          size: "75%", // Adjust the size of the donut
+          size: "75%",
         },
       },
     },
@@ -97,12 +97,12 @@ const DonutChart = () => {
       fontFamily: "Inter, sans-serif",
       fontSize: '18px', // Adjust legend font size
       markers: {
-        width: 10, // Adjust the size of the legend markers
-        height: 10, // Adjust the size of the legend markers
+        width: 10,
+        height: 10,
       },
       itemMargin: {
-        horizontal: 10, // Adjust horizontal margin between legend items
-        vertical: 5, // Adjust vertical margin between legend items
+        horizontal: 10,
+        vertical: 5,
       },
     },
     yaxis: {

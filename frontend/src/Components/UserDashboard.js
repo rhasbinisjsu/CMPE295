@@ -10,6 +10,8 @@ import DonutChart from './DonutChart';
 
 function UserDashboard() {
   const [data, setData] = useState(null);
+    const [numOfFarms, setNumOfFarms] = useState(0);
+    const [numOfCrops, setNumOfCrops] = useState(0);
     const [pins, setPins] = useState([]);
     const [mapCenter, setMapCenter] = useState([36.9668383, -121.5013172])
     const [analysisResults, setAnalysisResults] = useState({ cropsIdentified: 0, diseaseRate: 0 });
@@ -102,7 +104,47 @@ function UserDashboard() {
         className: ""
     });
 
-  return (
+    useEffect(() => {
+        const userId = sessionStorage.getItem('userId');
+        const METRICS_SERVER_IP=process.env.REACT_APP_METRICS_SERVER_IP;
+        const METRICS_SERVER_PORT=process.env.REACT_APP_METRICS_SERVER_PORT;
+        const fetchNumOfFarms = async () => {
+            try {
+                const response = await axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SERVER_PORT}/CropSense/MetricsServer/FarmMetricsController/getOwnerFarmCount?ownerId=${userId}`);
+                console.log("Number of Farms API Response:", response.data);
+
+                if (response.data) {
+                    setNumOfFarms(response.data);
+                } else {
+                    console.error("Unexpected API response format:", response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching number of farms:', error);
+            }
+        };
+
+        const fetchNumOfCrops = async () => {
+            try {
+                const response = await axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SERVER_PORT}/CropSense/MetricsServer/CropMetricsController/getActiveCropCountForOwner?ownerId=${userId}`);
+                console.log("Number of Crops API Response:", response.data);
+
+                if (response.data) {
+                    setNumOfCrops(response.data);
+                } else {
+                    console.error("Unexpected API response format:", response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching number of crops:', error);
+            }
+        };
+
+        fetchNumOfFarms();
+        fetchNumOfCrops();
+    }, []);
+
+
+
+    return (
       <div className="flex flex-col bg-gray-100">
           <div className="flex">
               <div className="w-4/5 mt-6">
@@ -200,7 +242,7 @@ function UserDashboard() {
                       </div>
                       <div className="p-4 text-right">
                           <p className="block antialiased font-sans text-2xl leading-normal font-normal text-blue-gray-600">No. of Farms</p>
-                          <h3 className="mt-4 block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">3</h3>
+                          <h3 className="mt-4 block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{numOfFarms}</h3>
                       </div>
                   </div>
 
@@ -212,7 +254,7 @@ function UserDashboard() {
                       </div>
                       <div className="p-4 text-right">
                           <p className="block antialiased font-sans text-2xl leading-normal font-normal text-blue-gray-600">No. of Crops</p>
-                          <h3 className="mt-4 block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">85%</h3>
+                          <h3 className="mt-4 block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{numOfCrops}</h3>
                       </div>
                   </div>
               </div>
