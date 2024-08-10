@@ -16,12 +16,12 @@ const Header = () => {
   return (
     <>
       <header className="text-black shadow p-4 flex justify-between items-center w-full">
-        {/* Flex container for the logo and title */}
+     
         <div className="flex items-center">
           <img src={logo} alt="Logo" style={{ height: '60px', width: '60px', marginRight: '10px' }} />
           <h1 className="text-2xl font-bold">CropSense</h1>
         </div>
-        {/* Flex container for the profile picture and username */}
+      
         <div className="flex items-center space-x-4 pr-4 cursor-pointer" onClick={handleModalOpen}>
           <img src={sessionStorage.getItem("profilePicture") || "https://picsum.photos/seed/picsum/200/300"} alt="Profile" className="h-10 w-10 rounded-full" />
           <span className="text-lg">{sessionStorage.getItem("firstName")} {sessionStorage.getItem("lastName")}</span>
@@ -31,7 +31,7 @@ const Header = () => {
         isOpen={isModalOpen}
         onRequestClose={handleModalClose}
         onSave={(updatedUser) => {
-          // Optionally handle saving updated user information
+       
         }}
         user={{
           name: `${sessionStorage.getItem("firstName")} ${sessionStorage.getItem("lastName")}`,

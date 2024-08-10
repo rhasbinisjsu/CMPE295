@@ -47,10 +47,10 @@ function UserSignUp() {
     };
 
     try {
-      // const response = await axios.post('http://localhost:8080/CropSense/AppServer/UserController/createUser', newUser);
+     
       const response = await axios.post(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/UserController/createUser`, newUser);
 
-      // Store user information in session storage
+   
       sessionStorage.setItem('userId', response.data.userId);
       sessionStorage.setItem('username', formData.uname);
       sessionStorage.setItem('email', formData.email);
@@ -60,12 +60,12 @@ function UserSignUp() {
 
       console.log('User created successfully:', response.data);
 
-      // Redirect to home page or any other page
+     
       history.push('/');
 
     } catch (error) {
       console.error('Error creating user:', error);
-      // Handle error: show an error message to the user
+      
       alert('Error creating user. Please try again.');
     }
   };

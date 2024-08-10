@@ -57,7 +57,7 @@ function UserDashboard() {
     const addPin = (e) => {
         if (pins.length < 4) {
             const newPin = {
-                id: pinCounter.current++, // Unique ID for each pin
+                id: pinCounter.current++, 
                 lat: e.latlng.lat,
                 lng: e.latlng.lng
             };

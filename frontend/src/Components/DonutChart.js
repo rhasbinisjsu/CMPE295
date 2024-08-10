@@ -43,8 +43,8 @@ const DonutChart = () => {
   const options = {
     series: series,
     chart: {
-      height: 400, // Adjust this value to change the height of the chart
-      width: 400, // Adjust this value to change the width of the chart
+      height: 400, 
+      width: 400, 
       type: "donut",
     },
     stroke: {
@@ -95,7 +95,7 @@ const DonutChart = () => {
     legend: {
       position: "right",
       fontFamily: "Inter, sans-serif",
-      fontSize: '18px', // Adjust legend font size
+      fontSize: '18px', 
       markers: {
         width: 10,
         height: 10,

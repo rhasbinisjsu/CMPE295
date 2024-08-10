@@ -1,8 +1,7 @@
-/* src/Components/Sidebar.css */
 .sidebar {
-  width: 250px; /* Adjust width as necessary */
-  background-color: #ffffff; /* Background color */
-  padding: 1rem; /* Padding */
+  width: 250px; 
+  background-color: #ffffff; 
+  padding: 1rem; 
 }
 
 .sidebar nav {

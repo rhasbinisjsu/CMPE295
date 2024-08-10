@@ -57,7 +57,7 @@ function Farm() {
   const handleView = (id) => {
     sessionStorage.setItem('farmId', id);
     alert(`View Farm with ID: ${id}`);
-    // history.push(`/Farm`);
+   
     history.push('/Crops')
   };
 
@@ -93,14 +93,14 @@ function Farm() {
         // Update farm name
         await axios.put(
             `http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/changeFarmName`,
-            form.name, // The farm name as plain text in the request body
+            form.name, 
             {
                 params: {
                     farmId: form.id,
                     ownerId: sessionStorage.getItem('userId'),
                 },
                 headers: {
-                    'Content-Type': 'text/plain', // Content type is plain text
+                    'Content-Type': 'text/plain', 
                 },
             }
         );
@@ -132,41 +132,6 @@ function Farm() {
     window.location.reload();
 };
 
-
-  // const handleUpdateSubmit = async (e) => {
-  //   e.preventDefault();
-    
-  //   try {
-      
-  //     await axios.put(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/changeFarmName?farmId=${form.id}&ownerId=${sessionStorage.getItem('userId')}`, null, {
-  //       params: {
-  //         farmId: form.id,
-  //         ownerId: sessionStorage.getItem('userId'),
-  //       },
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       data: {
-  //         newFarmName: form.name,
-  //       },
-  //     });
-  //     console.log("Farm name updated successfully.");
-
-
-  //     const newAddress = `${form.street}, ${form.city}, ${form.zip}`;
-  //     await axios.post(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/FarmController/changeFarmAddress?farmId=${form.id}&newAddress=${encodeURIComponent(newAddress)}`);
-  //     console.log("Farm address updated successfully.");
-  
-  //     // Update the farm data in the state
-  //     setData(data.map(farm => (farm.id === form.id ? { ...farm, name: form.name, address: { ...farm.address, line1: form.street, city: form.city, zip: form.zip } } : farm)));
-  
-  //   } catch (error) {
-  //     console.error("Error updating farm: ", error);
-  //   }
-  
-  //   closeUpdateModal();
-  //   window.location.reload();
-  // };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -274,7 +239,7 @@ function Farm() {
       sessionStorage.setItem('fenceId', fenceId);
       console.log("Farm fence created with ID:", fenceId);
   
-      // Prepare the coordinates data
+
       const coordinatesData = pins.map((pin, index) => ({
         chainId: pin.id,
         fenceId: fenceId,

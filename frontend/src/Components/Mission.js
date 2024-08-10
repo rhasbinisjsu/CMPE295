@@ -21,7 +21,7 @@ function Mission() {
   const [pins, setPins] = useState([]);
 
   useEffect(() => {
-    // Example fetch call to simulate data loading
+  
     setTimeout(() => {
       setData([
         { id: 1, missionType: 'Soil Sampling', crop: 'Wheat', missionDate: '2021-10-01', missionTime: '10:00', status: 'Pending' },
@@ -33,12 +33,12 @@ function Mission() {
 
   const handleView = (id) => {
     alert(`View Mission with ID: ${id}`);
-    // Implement view logic here
+  
   };
 
   const handleDelete = (id) => {
     alert(`Delete Mission with ID: ${id}`);
-    // Implement delete logic here
+   
   };
 
   const openModal = () => {
@@ -84,7 +84,7 @@ function Mission() {
     closeModal();
   };
 
-  // Custom icon using the provided SVG
+ 
   const customIconHtml = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
       <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -96,7 +96,7 @@ function Mission() {
     html: customIconHtml,
     iconSize: [24, 24],
     iconAnchor: [12, 24],
-    className: "" // Add your own class name if needed
+    className: "" 
   });
 
   return (
@@ -105,7 +105,7 @@ function Mission() {
       <div className="flex-1 flex justify-center items-start pt-40">
         <div className="w-3/4">
           <div className="relative">
-            {/* Create Mission Button */}
+            
             <button
               className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-indigo-500 text-white py-2 px-4 rounded shadow hover:bg-indigo-700"
               onClick={openModal}
@@ -113,7 +113,7 @@ function Mission() {
               Create Mission
             </button>
           </div>
-          {/* Table for showcasing missions */}
+         
           <div className="mt-16">
             <h1 className="text-3xl font-bold mb-4">Missions</h1>
             <table className="min-w-full bg-white">

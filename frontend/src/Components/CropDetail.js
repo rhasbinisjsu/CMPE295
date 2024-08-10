@@ -29,7 +29,7 @@ const CropDetail = () => {
   const [latestMetricGatherDate, setlatestMetricGatherDate] = useState(null);
 
   const [latestDiseaseMetrics, setLatestDiseaseMetrics] = useState(null);
-  // const [latestSpeciesMetrics, setLatestSpeciesMetrics] = useState(null);
+
   const [latestSpeciesMetrics, setLatestSpeciesMetrics] = useState(null);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ const CropDetail = () => {
     
     axios.get(`http://${METRICS_SERVER_IP}:${METRICS_SEVER_PORT}/CropSense/MetricsServer/SpeciesMetricsController/getLatestEntryDate?cropId=${cropId}`).then(response => {
       setLatestSpeciesMetrics(response.data);
-      // console.log(latestSpeciesMetrics)
+    
     })
     .catch(error => {
       console.error('Error fetching latest species metric gather date', error);

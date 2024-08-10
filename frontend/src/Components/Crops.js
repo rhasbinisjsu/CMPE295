@@ -39,7 +39,7 @@ function Crops() {
     const farmId = sessionStorage.getItem('farmId');
     try {
       const response = await axios.get(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/CropController/fetchActiveCropsForFarm?farmId=${farmId}`);
-      console.log(response.data); // Check if this is an array
+      console.log(response.data);
       setCrops(response.data);
     } catch (error) {
       console.error("Error fetching active crops:", error);
@@ -52,12 +52,7 @@ function Crops() {
     fetchCrops();
   }, []);
 
-  // const handleView = (id) => {
-  //   sessionStorage.setItem('cropId', id);
-  //   alert(`View Crop with ID: ${id}`);
-  //   // history.push(`/Farm`);
-  //   history.push('/Crops')
-  // };
+
   
   const handleView = (id) => {
     sessionStorage.setItem('cropId', id); 
@@ -375,7 +370,7 @@ function Crops() {
         </div>
       </Modal>
 
-      {/* Modal for creating crop */}
+  
       <Modal
         isOpen={isCreateModalOpen}
         onRequestClose={closeCreateModal}
@@ -501,7 +496,7 @@ function Crops() {
         </div>
       </Modal>
 
-      {/* Modal for updating crop */}
+  
       <Modal
         isOpen={isUpdateModalOpen}
         onRequestClose={closeUpdateModal}

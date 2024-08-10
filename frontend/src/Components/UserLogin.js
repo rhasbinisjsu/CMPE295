@@ -37,15 +37,14 @@ function UserLogin() {
     const { uname, pswd } = formData;
 
     try {
-      // Perform login API call
-      // const response = await axios.get(`http://localhost:8080/CropSense/AppServer/UserController/login?uname=${uname}&pswd=${pswd}`);
+      
       const response = await axios.get(`http://${APP_SERVER_IP}:${APP_SERVER_PORT}/CropSense/AppServer/UserController/login?uname=${uname}&pswd=${pswd}`);
       console.log('Login successful. User ID:', response.data);
 
-      // Update sessionStorage with user ID
+      
       sessionStorage.setItem('userId', response.data); // Assuming response.data is the user ID
 
-      // Redirect to home page after successful login
+     
       history.push('/userDashboard');
     } catch (error) {
       console.error('Error logging in:', error);
